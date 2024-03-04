@@ -13,9 +13,10 @@ public interface Dao<T> {
 
     /**
      * Récupère tous les utilisateurs enregistrés
+     *
      * @return Un Set de login
      */
-    Set<String> getAll();
+    Set<User> getAll();
 
     /**
      * Crée un utilisateur et le sauvegarde
