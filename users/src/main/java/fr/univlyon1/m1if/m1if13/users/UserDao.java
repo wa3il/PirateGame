@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Objects;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserDao implements Dao<User> {
 
     private List<User> users = new ArrayList<>();
