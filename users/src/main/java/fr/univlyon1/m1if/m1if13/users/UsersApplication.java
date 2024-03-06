@@ -15,7 +15,7 @@ public class UsersApplication {
 
 		User user1 = getUser("John");
 		System.out.println(user1);
-		userDao.update(user1, new String[]{"Jake", "PIRATE", "password123"});
+		userDao.update(user1, new String[]{"password123"});
 
 		User user2 = getUser("Susan");
 		userDao.delete(user2);

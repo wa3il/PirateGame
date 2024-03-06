@@ -37,8 +37,7 @@ public class UserDao implements Dao<User> {
     @Override
     public void update(User user, String[] params) {
         user.setPassword(Objects.requireNonNull(
-                params[1], "Password cannot be null"));
-
+                params[0], "Password cannot be null"));
         users.add(user);
     }
 
