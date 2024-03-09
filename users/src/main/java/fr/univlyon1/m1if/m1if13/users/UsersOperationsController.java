@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.Optional;
@@ -42,10 +43,10 @@ public class UsersOperationsController {
                         .header("Authentication", jwtToken)
                         .build();
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
@@ -70,7 +71,7 @@ public class UsersOperationsController {
         if (validateToken(jwt)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
     }
 
