@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDao implements Dao<User> {
 
-    private List<User> users = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
 
     public UserDao() {
         users.add(new User("John", Species.PIRATE, "password123"));
@@ -26,7 +27,7 @@ public class UserDao implements Dao<User> {
 
     @Override
     public Set<User> getAll() {
-        return (Set<User>) users;
+        return new HashSet<>(users);
     }
 
     @Override
