@@ -2,6 +2,9 @@ package fr.univlyon1.m1if.m1if13.users;
 
 import javax.naming.AuthenticationException;
 
+/**
+ * Représente un utilisateur du système.
+ */
 public class User {
     private final String login;
     private Species species;
@@ -35,6 +38,8 @@ public class User {
     public void setSpecies(Species species) {
         this.species = species;
     }
+
+    public String getPassword() { return password;}
 
     public void setPassword(String password) {
         this.password = password;
