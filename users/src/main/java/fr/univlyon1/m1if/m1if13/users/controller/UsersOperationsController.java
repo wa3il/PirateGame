@@ -32,6 +32,7 @@ public class UsersOperationsController {
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = {"http://localhost", "http://192.168.75.124", "https://192.168.75.124"})
     @Operation(summary = "User login", description = "Authenticate a user and generate JWT token")
     @ApiResponse(responseCode = "204", description = "Login successful")
     @ApiResponse(responseCode = "401", description = "Invalid credentials")
@@ -45,7 +46,8 @@ public class UsersOperationsController {
             if (user.getPassword().equals(password)) {
                 String jwtToken = generateToken(login);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                        .header("Authentication", jwtToken)
+                        .header("Authorization", jwtToken)  // Ajouter le header Authorization
+                        .header("Access-Control-Expose-Headers", "Authorization")  // Exposer le header Authorization
                         .build();
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");

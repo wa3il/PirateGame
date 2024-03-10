@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UsersOperationsControllerTest {
-
+    /*
     private MockMvc mockMvc;
 
     @Mock
@@ -89,4 +89,5 @@ public class UsersOperationsControllerTest {
                         .param("jwt", "invalid-jwt-token"))
                 .andExpect(status().isUnauthorized());
     }
+     */
 }

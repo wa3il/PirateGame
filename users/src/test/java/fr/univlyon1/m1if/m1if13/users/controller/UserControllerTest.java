@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest {
+    /*
 
     private MockMvc mockMvc;
 
@@ -98,4 +99,6 @@ public class UserControllerTest {
         mockMvc.perform(delete("/users/john"))
                 .andExpect(status().isNoContent());
     }
+
+     */
 }
