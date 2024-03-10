@@ -2,6 +2,9 @@ package fr.univlyon1.m1if.m1if13.users;
 
 import javax.naming.AuthenticationException;
 
+/**
+ * Représente un utilisateur du système.
+ */
 public class User {
     private final String login;
     private Species species;

@@ -1,5 +1,6 @@
 package fr.univlyon1.m1if.m1if13.users.config;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
+@Hidden // Pour masquer cette classe dans la documentation Swagger
 public class WebConfig implements WebMvcConfigurer {
 
     public static final String MEDIA_TYPE_JSONLD  = "application/ld+json";

@@ -1,11 +1,14 @@
 package fr.univlyon1.m1if.m1if13.users;
 
-import org.springframework.boot.SpringApplication;
+import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 
 import java.util.Optional;
 
+/**
+ * Main class to run the Users Application.
+ */
 @SpringBootApplication(exclude = { ThymeleafAutoConfiguration.class })
 public class UsersApplication {
 

@@ -1,15 +1,20 @@
-package fr.univlyon1.m1if.m1if13.users;
+package fr.univlyon1.m1if.m1if13.users.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import fr.univlyon1.m1if.m1if13.users.User;
+import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.util.Date;
 import java.util.Optional;
@@ -26,14 +31,14 @@ public class UsersOperationsController {
         this.userDao = userDao;
     }
 
-    /**
-     * Procédure de login utilisée par un utilisateur
-     * @param login Le login de l'utilisateur. L'utilisateur doit avoir été créé préalablement et son login doit être présent dans le DAO.
-     * @param password Le password à vérifier.
-     * @return Une ResponseEntity avec le JWT dans le header "Authentication" si le login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
-     */
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestParam("login") String login, @RequestParam("password") String password) {
+    @Operation(summary = "User login", description = "Authenticate a user and generate JWT token")
+    @ApiResponse(responseCode = "204", description = "Login successful")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<Void> login(
+            @Parameter(description = "User login", required = true) @RequestParam("login") String login,
+            @Parameter(description = "User password", required = true) @RequestParam("password") String password) {
         Optional<User> userOptional = userDao.get(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -50,24 +55,22 @@ public class UsersOperationsController {
         }
     }
 
-    /**
-     * Procédure de logout utilisée par un utilisateur
-     * @param login Le login de l'utilisateur.
-     * @return Une ResponseEntity avec le code de statut approprié (204 ou 404).
-     */
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestParam("login") String login) {
+    @Operation(summary = "User logout", description = "Logout a user and invalidate JWT token")
+    @ApiResponse(responseCode = "204", description = "Logout successful")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<Void> logout(
+            @Parameter(description = "User login", required = true) @RequestParam("login") String login) {
         // Pas besoin de déconnexion, on supprime juste le token
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /**
-     * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
-     * @param jwt Le token JWT qui se trouve dans le header "Authentication" de la requête
-     * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
-     */
     @GetMapping("/authenticate")
-    public ResponseEntity<Void> authenticate(@RequestParam("jwt") String jwt) {
+    @Operation(summary = "Authenticate user", description = "Authenticate a user based on JWT token")
+    @ApiResponse(responseCode = "204", description = "Authentication successful")
+    @ApiResponse(responseCode = "401", description = "Invalid token")
+    public ResponseEntity<Void> authenticate(
+            @Parameter(description = "JWT token", required = true) @RequestParam("jwt") String jwt) {
         if (validateToken(jwt)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
