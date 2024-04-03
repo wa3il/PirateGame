@@ -2,7 +2,8 @@
 /target/
 
 # Ignore les dossiers générés par Node.js
-/node_modules/
+/api/node_modules/
+/api/.DS_Store
 
 # Ignorer les fichiers spécifiques à IntelliJ IDEA
 .idea/
@@ -12,3 +13,5 @@
 
 # Ignorer les fichiers de configuration de VSCode
 .vscode/
+
+
