@@ -1,11 +1,8 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import fr.univlyon1.m1if.m1if13.users.User;
 import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import fr.univlyon1.m1if.m1if13.users.utils.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +21,6 @@ public class UsersOperationsController {
 
     private final UserDao userDao;
 
-    private final String secretKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphY2sgRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.lzqnhucjESt_hUIOcGsau-Q7XAZ5HJvWQWwjie59x1s";
-
     @Autowired
     public UsersOperationsController(UserDao userDao) {
         this.userDao = userDao;
@@ -38,16 +33,17 @@ public class UsersOperationsController {
     @ApiResponse(responseCode = "401", description = "Invalid credentials")
     @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<Void> login(
-            @Parameter(description = "User login", required = true) @RequestParam("login") String login,
-            @Parameter(description = "User password", required = true) @RequestParam("password") String password) {
+            @RequestHeader("login") String login,
+            @RequestHeader("password") String password,
+            @RequestHeader("Origin") String origin) {
         Optional<User> userOptional = userDao.get(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(password)) {
-                String jwtToken = generateToken(login);
+                String jwtToken = JwtHelper.generateToken(login, origin);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                        .header("Authorization", jwtToken)  // Ajouter le header Authorization
-                        .header("Access-Control-Expose-Headers", "Authorization")  // Exposer le header Authorization
+                        .header("Authorization", jwtToken)  // Add Authorization header
+                        .header("Access-Control-Expose-Headers", "Authorization")  // Expose Authorization header
                         .build();
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
@@ -62,8 +58,8 @@ public class UsersOperationsController {
     @ApiResponse(responseCode = "204", description = "Logout successful")
     @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<Void> logout(
-            @Parameter(description = "User login", required = true) @RequestParam("login") String login) {
-        // Pas besoin de déconnexion, on supprime juste le token
+            @RequestHeader("login") String login) {
+        // Just remove the token, no need to actually logout
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -72,40 +68,17 @@ public class UsersOperationsController {
     @ApiResponse(responseCode = "204", description = "Authentication successful")
     @ApiResponse(responseCode = "401", description = "Invalid token")
     public ResponseEntity<Void> authenticate(
-            @Parameter(description = "JWT token", required = true) @RequestParam("jwt") String jwt) {
-        if (validateToken(jwt)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
-        }
-    }
-
-    /**
-     * Génère un token JWT pour l'utilisateur donné
-     * @param login Le login de l'utilisateur
-     * @return Le token JWT généré
-     */
-    private String generateToken(String login) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000); // Expire dans 1 heure
-
-        return JWT.create()
-                .withSubject(login)
-                .withExpiresAt(expiryDate)
-                .sign(Algorithm.HMAC256(secretKey));
-    }
-
-    /**
-     * Valide un token JWT
-     * @param jwt Le token JWT à valider
-     * @return true si le token est valide, false sinon
-     */
-    private boolean validateToken(String jwt) {
+            @RequestParam("jwt") String jwt,
+            @RequestHeader("Origin") String origin) {
         try {
-            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(jwt);
-            return true;
-        } catch (JWTVerificationException e) {
-            return false;
+            String subject = JwtHelper.verifyToken(jwt, origin);
+            if (subject != null && !subject.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
     }
 }
