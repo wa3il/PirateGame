@@ -1,49 +1,54 @@
 // adminController.js
 
-const ZRR = require('../models/ZRR');
-const GameResource = require('../models/GameResource');
+import axios from 'axios';
+import { setZrrData } from '../data/zrr';
+import { getGameResources } from '../data/gameResource';
 
 // Fixer les limites du village ZRR
-exports.setZRRLimits = async (req, res) => {
+const setZrr = async (req, res) => {
 	const { limiteNO, limiteNE, limiteSE, limiteSO } = req.body;
 
 	try {
-		let zrr = await ZRR.findOne();
+		const response = await axios.post('http://localhost:8080/api/setZrr', {
+			limiteNO,
+			limiteNE,
+			limiteSE,
+			limiteSO,
+		});
 
-		if (!zrr) {
-			zrr = new ZRR({
-				limiteNO,
-				limiteNE,
-				limiteSE,
-				limiteSO,
-			});
-		} else {
-			zrr.limiteNO = limiteNO;
-			zrr.limiteNE = limiteNE;
-			zrr.limiteSE = limiteSE;
-			zrr.limiteSO = limiteSO;
-		}
+		const updatedZrr = response.data;
+		setZrrData(updatedZrr);
 
-		const savedZRR = await zrr.save();
-		res.json(savedZRR);
+		res.json(updatedZrr);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
 };
 
 // Préciser le TTL des fioles
-exports.setFioleTTL = async (req, res) => {
+const setTtl = async (req, res) => {
 	const { id, ttl } = req.body;
+	const fiole = getGameResources().find((resource) => resource.id === id);
+
+	if (!fiole || fiole.role !== 'fiole') {
+		return res.status(404).json({ message: 'Fiole not found' });
+	}
 
 	try {
-		const fiole = await GameResource.findById(id);
+		const response = await axios.post('http://localhost:8080/api/setTtl', {
+			id,
+			ttl,
+		});
 
-		if (!fiole || fiole.role !== 'fiole') {
-			return res.status(404).json({ message: 'Fiole not found' });
+		const updatedFiole = response.data;
+
+		// Mettre à jour les ressources locales si nécessaire
+		if (updatedFiole.id === id) {
+			const index = getGameResources().findIndex((resource) => resource.id === id);
+			if (index !== -1) {
+				getGameResources()[index] = updatedFiole;
+			}
 		}
-
-		fiole.fioleInfo.ttl = ttl;
-		const updatedFiole = await fiole.save();
 
 		res.json(updatedFiole);
 	} catch (error) {
@@ -52,22 +57,21 @@ exports.setFioleTTL = async (req, res) => {
 };
 
 // Déclencher l'apparition d'une nouvelle fiole
-exports.createFiole = async (req, res) => {
+const triggerFiole = async (req, res) => {
 	const { position } = req.body;
 
 	try {
-		const newFiole = new GameResource({
+		const response = await axios.post('http://localhost:8080/api/triggerFiole', {
 			position,
-			role: 'fiole',
-			fioleInfo: {
-				nombreFioles: 1,
-				ttl: 60 * 60, // TTL par défaut d'une heure
-			},
 		});
 
-		const savedFiole = await newFiole.save();
-		res.json(savedFiole);
+		const newFiole = response.data;
+		getGameResources().push(newFiole);
+
+		res.json(newFiole);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
 };
+
+export default { setZrr, setTtl, triggerFiole };
