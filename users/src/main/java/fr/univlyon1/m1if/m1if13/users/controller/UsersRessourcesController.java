@@ -19,12 +19,12 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
-public class UserController {
+public class UsersRessourcesController {
 
     private final UserDao userDao;
 
     @Autowired
-    public UserController(UserDao userDao) {
+    public UsersRessourcesController(UserDao userDao) {
         this.userDao = userDao;
     }
 
