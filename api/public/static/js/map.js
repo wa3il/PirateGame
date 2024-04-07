@@ -1,3 +1,7 @@
+// map.js
+
+import { updateLatValue, updateLonValue, updateZoomValue } from './form.js';
+
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
 
@@ -26,20 +30,20 @@ function initMap() {
 
 	// Clic sur la carte
 	mymap.on('click', e => {
-		updateMap([e.latlng.lat, e.latlng.lng], mymap.getZoom());
+		updatePosition(e.latlng.lat, e.latlng.lng, mymap.getZoom());
 	});
 
 	return mymap;
 }
 
-// Mise à jour de la map
-function updateMap(latlng, zoom) {
-	// Affichage à la nouvelle position
-	mymap.setView(latlng, zoom);
-
-	// La fonction de validation du formulaire renvoie false pour bloquer le rechargement de la page.
-	return false;
+// Mettre à jour la carte avec de nouvelles coordonnées
+function updatePosition(lat, lng, zoom) {
+	mymap.setView([lat, lng], zoom);
+	updateLatValue(lat.toFixed(6)); // Met à jour la latitude dans le formulaire
+	updateLonValue(lng.toFixed(6)); // Met à jour la longitude dans le formulaire
+	updateZoomValue(zoom); // Met à jour le zoom dans le formulaire
 }
 
-export { updateMap };
+
+export { updatePosition };
 export default initMap;
