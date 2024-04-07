@@ -12,10 +12,10 @@ public class UserRequestDto {
     public UserRequestDto() {
     }
 
-    public UserRequestDto(String login, String password, String species) {
+    public UserRequestDto(String login, String password, Species species) {
         this.login = login;
         this.password = password;
-        this.species = Species.valueOf(species);
+        this.species = species;
     }
 
     public String getLogin() {

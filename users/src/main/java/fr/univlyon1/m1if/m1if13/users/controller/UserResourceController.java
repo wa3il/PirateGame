@@ -66,7 +66,10 @@ public class UserResourceController {
      * @param contentType the content type
      * @return the response entity
      */
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+            )
     public ResponseEntity<AuthenticationResponse> createUser(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
         Optional<UserRequestDto> userRequestDto = getUserDtoRequest(requestBody, contentType);
         if (userRequestDto.isPresent()) {
