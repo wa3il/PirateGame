@@ -1,0 +1,14 @@
+# Ignore les dossiers générés par Java
+/target/
+
+# Ignore les dossiers générés par Node.js
+/node_modules/
+
+# Ignorer les fichiers spécifiques à IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignorer les fichiers de configuration de VSCode
+.vscode/
