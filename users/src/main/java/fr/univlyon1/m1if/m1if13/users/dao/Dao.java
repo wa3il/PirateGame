@@ -20,7 +20,7 @@ public interface Dao<T> {
 
     @Operation(summary = "Get all users", description = "Returns a list of all registered users")
     @ApiResponse(responseCode = "200", description = "List of users", content = @Content(schema = @Schema(implementation = User.class)))
-    Set<User> getAll();
+    Set<String> getAll();
 
     @Operation(summary = "Create new user", description = "Creates and saves a new user")
     @ApiResponse(responseCode = "201", description = "User created", content = @Content(schema = @Schema(implementation = User.class)))

@@ -2,18 +2,21 @@ package fr.univlyon1.m1if.m1if13.users.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.univlyon1.m1if.m1if13.users.Species;
 
 public class UserDto {
     private String login;
     private String password;
+    private Species species;
 
     public UserDto() {
     }
 
     @JsonCreator
-    public UserDto(@JsonProperty("login") final String login,
+    public UserDto(@JsonProperty("login") final String login, @JsonProperty final Species species,
                    @JsonProperty("password") final String password) {
         this.login = login;
+        this.species = species;
         this.password = password;
     }
 
@@ -25,6 +28,11 @@ public class UserDto {
         this.login = login;
     }
 
+    public Species getSpecies() {return species;}
+
+    public void setSpecies(final Species species) {
+        this.species = species;
+    }
 
     public String getPassword() {
         return password;
