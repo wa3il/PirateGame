@@ -30,5 +30,5 @@ api:
     - apk add --no-cache openssh-client
     - cd users
     - mvn clean package
-    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@$IP_ADDRESS:/opt/tomcat/webapps/api.war
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@$IP_ADDRESS:/opt/tomcat/webapps/users.war
     
