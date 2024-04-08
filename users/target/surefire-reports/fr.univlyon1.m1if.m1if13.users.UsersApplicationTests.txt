@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: fr.univlyon1.m1if.m1if13.users.UsersApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.851 s -- in fr.univlyon1.m1if.m1if13.users.UsersApplicationTests
