@@ -1,0 +1,224 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080/users_war_exploded
+    description: Generated server url
+paths:
+  /users/{login}:
+    get:
+      tags:
+        - user-controller
+      summary: Get user by login
+      description: Retrieve a user by their login.
+      operationId: getUserByLogin
+      parameters:
+        - name: login
+          in: path
+          description: User login
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - user-controller
+      summary: Update user password
+      description: Update a user's password.
+      operationId: updateUserPassword
+      parameters:
+        - name: login
+          in: path
+          description: User login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: New password
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Password updated.
+        '404':
+          description: User not found.
+    delete:
+      tags:
+        - user-controller
+      summary: Delete user
+      description: Delete a user by their login.
+      operationId: deleteUser
+      parameters:
+        - name: login
+          in: path
+          description: User login
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted.
+        '404':
+          description: User not found.
+  /users:
+    get:
+      tags:
+        - user-controller
+      summary: Get all users
+      description: Retrieve all users from the database.
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            text/html:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - user-controller
+      summary: Create user
+      description: Create a new user.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: User created.
+  /logout:
+    post:
+      tags:
+        - users-operations-controller
+      summary: User logout
+      description: Logout a user and invalidate JWT token
+      operationId: logout
+      parameters:
+        - name: login
+          in: query
+          description: User login
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Logout successful
+        '404':
+          description: User not found
+  /login:
+    post:
+      tags:
+        - users-operations-controller
+      summary: User login
+      description: Authenticate a user and generate JWT token
+      operationId: login
+      parameters:
+        - name: login
+          in: query
+          description: User login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: User password
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+        '404':
+          description: User not found
+  /authenticate:
+    get:
+      tags:
+        - users-operations-controller
+      summary: Authenticate user
+      description: Authenticate a user based on JWT token
+      operationId: authenticate
+      parameters:
+        - name: jwt
+          in: query
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Authentication successful
+        '401':
+          description: Invalid token
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        login:
+          type: string
+        species:
+          type: string
+          description: Species of a user
+          enum:
+            - PIRATE
+            - VILLAGEOIS
+            - ADMIN
+        password:
+          type: string
+        connected:
+          type: boolean
+        image:
+          type: string
