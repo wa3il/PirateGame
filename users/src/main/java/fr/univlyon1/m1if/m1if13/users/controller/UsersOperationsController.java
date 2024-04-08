@@ -1,106 +1,79 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
-import fr.univlyon1.m1if.m1if13.users.User;
-import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
-import fr.univlyon1.m1if.m1if13.users.dto.UserLoginDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.univlyon1.m1if.m1if13.users.dao.Dao;
+import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationResponse;
+import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
+import fr.univlyon1.m1if.m1if13.users.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
-import javax.naming.AuthenticationException;
-import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static fr.univlyon1.m1if.m1if13.users.utils.JwtHelper.*;
+import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getUserDtoRequest;
 
 @Controller
+@RequestMapping("/users")
 public class UsersOperationsController {
-
-    private final UserDao userDao;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public UsersOperationsController(UserDao userDao) {
-        this.userDao = userDao;
+    public UsersOperationsController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/login")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://192.168.75.124:8080", "https://192.168.75.124", "https://192.168.75.124/api", "https://192.168.75.124/api/users" })
-    @Operation(summary = "User login", description = "Authenticate a user and generate JWT token")
-    @ApiResponse(responseCode = "204", description = "Login successful")
-    @ApiResponse(responseCode = "401", description = "Invalid credentials")
-    @ApiResponse(responseCode = "404", description = "User not found")
-    public ResponseEntity<Void> login(
-            @RequestBody final UserLoginDto userDto,
-            @RequestHeader("origin") String origin) throws Exception {
-        if (userDto.getLogin() == null || userDto.getPassword() == null ) {
-            throw new Exception("Paramètre manquant");
-        }
-        Optional<User> user = userDao.get(userDto.getLogin());
-        if (user.isPresent()) {
-            user.get().authenticate(userDto.getPassword());
-            if (user.get().isConnected()) {
-                String token = generateToken(userDto.getLogin(), origin);
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Authentication", "Bearer " + token);
-                headers.add("Access-Control-Expose-Headers", "Authentication");
-                return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
-            } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
+    /**
+     * Procédure de login utilisée par un utilisateur
+     * parametre login et mdp
+     * @return Une ResponseEntity avec le JWT dans le header "Authorization" si le login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
+     */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
+    @PostMapping(value = "/login",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+        Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
+        if (userRequest.isPresent()) {
+            return ResponseEntity.ok(authenticationService.authenticate(userRequest.get()));
         } else {
-            throw new NoSuchElementException("Cet utilisateur n'existe pas");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    @PostMapping("/logout")
-    @Operation(summary = "User logout", description = "Logout a user and invalidate JWT token")
-    @ApiResponse(responseCode = "204", description = "Logout successful")
-    @ApiResponse(responseCode = "404", description = "User not found")
-    public ResponseEntity<Void> logout(@RequestHeader("Authentication") final String jwt,
-                                       @RequestHeader("origin") final String origin) throws Exception {
-        String token = jwt.replace("Bearer ", "");
-        String login = verifyToken(token, origin);
-        Optional<User> user = userDao.get(login);
-        if (user.isPresent()) {
-            if (user.get().isConnected()) {
-                user.get().disconnect();
-                String newToken = noLifeTimeToken(login, origin);
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Authentication", "Bearer " + newToken);
-                return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
-            } else {
-                throw new Exception("Déconnexion impossible");
-            }
+    /**
+     * Réalise la déconnexion
+     */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
+    @PostMapping(value = "/logout",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<Void> logout(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+        Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
+        if (userRequest.isPresent()) {
+            authenticationService.logout(userRequest.get().getLogin());
+            return ResponseEntity.ok().build();
         } else {
-            throw new AuthenticationException("Erreur d'authorisation");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
+
+
+
+    /**
+     * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
+     * @param jwt Le token JWT qui se trouve dans le header "Authorization" de la requête
+     * @param origin L'origine de la requête (pour la comparer avec celle du client, stockée dans le token JWT)
+     * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
+     */
     @GetMapping("/authenticate")
-    @Operation(summary = "Authenticate user", description = "Authenticate a user based on JWT token")
-    @ApiResponse(responseCode = "204", description = "Authentication successful")
-    @ApiResponse(responseCode = "401", description = "Invalid token")
-    public ResponseEntity<String> authenticate(
-            @RequestParam("jwt") final String jwt,
-            @RequestParam("origin") final String origin) throws Exception {
-        String token = jwt.replace("Bearer ", "");
-        String login = verifyToken(token, origin);
-        Optional<User> user = userDao.get(login);
-        if (user.isPresent()) {
-            if (user.get().isConnected()) {
-                return new ResponseEntity<String>(user.get().getLogin(), HttpStatus.OK);
-            } else {
-                throw new Exception("L'utilisateur n'est pas connecté");
-            }
-        } else {
-            throw new AuthenticationException("le token à expiré");
-        }
+    public ResponseEntity<Void> authenticate(@RequestParam("jwt") String jwt, @RequestParam("origin") String origin) {
+        // TODO
+        return null;
     }
 }
