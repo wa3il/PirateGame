@@ -25,9 +25,10 @@ api:
     # Useful only for debugging
     #- cat ~/.m2/settings.xml
     - chmod 400 "$CI_SSH_KEY"
-    - apt update && apt install -y openssh-client
+   
 
   script:
+    - apt update && apt install -y openssh-client
     - cd users
     - mvn clean package
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY target/users.war gitlabci@$IP_ADDRESS:/opt/tomcat/webapps/api.war
