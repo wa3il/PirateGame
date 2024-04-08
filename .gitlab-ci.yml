@@ -25,6 +25,7 @@ api:
     # Useful only for debugging
     #- cat ~/.m2/settings.xml
     - chmod 400 "$CI_SSH_KEY"
+    - apt update && apt install -y openssh-client
 
   script:
     - cd users
