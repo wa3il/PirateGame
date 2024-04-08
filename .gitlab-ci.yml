@@ -22,7 +22,7 @@ api:
     - main
   before_script: 
     - chmod +x ci/setup-mvn-proxy.sh
-    - chmod 400 $CI_SSH_KEY
+    - chmod 400 "$CI_SSH_KEY"
   script:
     - cd users
     - mvn clean package
