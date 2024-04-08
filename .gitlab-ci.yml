@@ -6,7 +6,7 @@ cache:
   paths:
     # Must be within the repository under test hence we can't use the
     # default ~/.m2
-    .m2/repository
+    - .m2/repository
 
 variables:
   # Use the cached directory above.
