@@ -1,5 +1,5 @@
 # Ignore les dossiers générés par Java
-./target/
+/users/target/
 
 # Ignore les dossiers générés par Node.js
 /api/node_modules/
