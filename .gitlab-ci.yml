@@ -21,7 +21,7 @@ api:
   only:
     - main
   before_script: 
-    - ci/setup-mvn-proxy.sh
+    - chmod +x ci/setup-mvn-proxy.sh
     - chmod 400 $CI_SSH_KEY
   script:
     - cd users
