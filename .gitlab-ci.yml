@@ -24,7 +24,7 @@ api:
     - ./ci/setup-mvn-proxy.sh
     # Useful only for debugging
     #- cat ~/.m2/settings.xml
-    - chmod 400 $CI_SSH_KEY
+    - chmod 400 "$CI_SSH_KEY"
 
   script:
     - cd users
