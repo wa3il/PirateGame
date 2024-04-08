@@ -1,17 +1,18 @@
 # Ignore les dossiers générés par Java
-/target/
+/users/target/
 
 # Ignore les dossiers générés par Node.js
 /api/node_modules/
-/admin/node_modules
+/admin/node_modules/
 /api/.DS_Store
-
+/admin/.DS_Store
 
 # Ignorer les fichiers spécifiques à IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
+.DS_Store
 
 # Ignorer les fichiers de configuration de VSCode
 .vscode/

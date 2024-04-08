@@ -1,6 +1,5 @@
-package fr.univlyon1.m1if.m1if13.users.servlet;
+package fr.univlyon1.m1if.m1if13.users;
 
-import fr.univlyon1.m1if.m1if13.users.UsersApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
