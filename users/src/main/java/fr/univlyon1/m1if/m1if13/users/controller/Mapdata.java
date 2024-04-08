@@ -42,7 +42,7 @@ public class Mapdata {
     public static Optional<UserRequestDto> getUserDtoRequest(String requestBody, String contentType) throws JsonProcessingException {
         if (contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
             UserRequestDto userRequest = objectMapper.readValue(requestBody, UserRequestDto.class);
-            if (userRequest.getLogin() == null || userRequest.getPassword() == null) {
+            if (userRequest.getLogin() == null) {
                 return Optional.empty();
             } else {
                 return Optional.of(userRequest);
@@ -58,7 +58,7 @@ public class Mapdata {
             userRequest.setLogin(login);
             userRequest.setPassword(password);
             userRequest.setSpecies(Species.valueOf(species));
-            if (login == null || password == null) {
+            if (login == null) {
                 return Optional.empty();
             }
             return Optional.of(userRequest);

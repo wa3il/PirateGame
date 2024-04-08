@@ -21,17 +21,20 @@ public class User implements UserDetails {
     // Nom du fichier image qui représentera l'utilisateur sur la carte
     private String image;
 
+    private String jwt;
+
     public User(String login, Species species, String password) {
         this.login = login;
         this.species = species;
         this.password = password;
     }
 
-    public User(String login, Species species, String password, String image) {
+    public User(String login, Species species, String password, String image, String jwt) {
         this.login = login;
         this.species = species;
         this.password = password;
         this.image = image;
+        this.jwt = jwt;
     }
 
     /**
@@ -106,4 +109,15 @@ public class User implements UserDetails {
     public boolean isEnabled() {return true;}
 
 
+    public void setJwt(String jwt) { this.jwt = jwt; }
+
+    public String getJwt() { return jwt; }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean b) {
+        this.connected = b;
+    }
 }

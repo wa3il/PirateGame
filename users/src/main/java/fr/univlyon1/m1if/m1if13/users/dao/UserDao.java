@@ -50,4 +50,9 @@ public class UserDao implements Dao<User> {
         users.remove(u);
     }
 
+    public Optional<User> findByJwt(String jwt) {
+        return users.stream()
+                .filter(u -> u.getJwt().equals(jwt))
+                .findFirst();
+    }
 }

@@ -31,6 +31,7 @@ public class UsersOperationsController {
      * parametre login et mdp
      * @return Une ResponseEntity avec le JWT dans le header "Authorization" si le login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PostMapping(value = "/login",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -46,8 +47,22 @@ public class UsersOperationsController {
     /**
      * Réalise la déconnexion
      */
-//    @PostMapping("/logout")
-    // TODO
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
+    @PostMapping(value = "/logout",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<Void> logout(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+        Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
+        if (userRequest.isPresent()) {
+            authenticationService.logout(userRequest.get().getLogin());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+
+
 
     /**
      * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.

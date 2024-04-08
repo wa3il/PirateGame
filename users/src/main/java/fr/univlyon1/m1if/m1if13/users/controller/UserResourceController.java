@@ -36,6 +36,7 @@ public class UserResourceController {
      *
      * @return a list of users
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @GetMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Set<String>> getAllUser() {
@@ -48,6 +49,7 @@ public class UserResourceController {
      * @param login the user login
      * @return the user
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @GetMapping(value = "/{login}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -66,6 +68,7 @@ public class UserResourceController {
      * @param contentType the content type
      * @return the response entity
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -88,6 +91,7 @@ public class UserResourceController {
      * @param contentType the content type
      * @return the response entity
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PutMapping(value = "/{login}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<?> updateUser(
             @PathVariable("login") final String login,
@@ -118,6 +122,7 @@ public class UserResourceController {
      * @param login the user login
      * @return the response entity
      */
+    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @DeleteMapping(value = "/{login}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<?> deleteUser(@PathVariable("login") final String login) {
         try {

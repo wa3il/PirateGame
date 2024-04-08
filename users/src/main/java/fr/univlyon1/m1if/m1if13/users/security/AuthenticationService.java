@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -31,9 +32,15 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(UserRequestDto userRequestDto) {
-        User user = new User(userRequestDto.getLogin(),userRequestDto.getSpecies(), passwordEncoder.encode(userRequestDto.getPassword()), userRequestDto.getLogin());
+        User user = new User(userRequestDto.getLogin(),userRequestDto.getSpecies(), passwordEncoder.encode(userRequestDto.getPassword()));
+        if (userDao.findByLogin(userRequestDto.getLogin()).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+        user.setConnected(true);
+        String jwt = jwtService.generateToken(user);
+        user.setJwt(jwt);
         userDao.save(user);
-        return new AuthenticationResponse(jwtService.generateToken(user));
+        return new AuthenticationResponse(jwt);
     }
 
     public AuthenticationResponse authenticate(UserRequestDto userRequestDto) {
@@ -45,8 +52,29 @@ public class AuthenticationService {
         Optional<User> user = userDao.findByLogin(userRequestDto.getLogin());
         if(user.isEmpty()) {
             throw new RuntimeException("User not found");
-        }else {
-            return new AuthenticationResponse(jwtService.generateToken(user.get()));
+        }
+        else if (user.get().getJwt() != null) {
+            user.get().setConnected(true);
+            return new AuthenticationResponse(user.get().getJwt());
+        }
+        else {
+            user.get().setConnected(true);
+            String jwt = jwtService.generateToken(user.get());
+            user.get().setJwt(jwt);
+            return new AuthenticationResponse(jwt);
         }
     }
+
+    public void logout(String login){
+        Optional<User> user = userDao.findByLogin(login);
+        user.ifPresent(value -> {
+            value.setJwt(null);
+            value.setConnected(false);
+        });
+    }
+
+    public Set<String> getAlluserDao() {
+        return userDao.getAll();
+    }
 }
+

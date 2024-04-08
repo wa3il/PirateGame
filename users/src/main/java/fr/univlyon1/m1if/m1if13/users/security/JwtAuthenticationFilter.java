@@ -1,5 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.security;
 
+import fr.univlyon1.m1if.m1if13.users.dao.UserDao;
+import fr.univlyon1.m1if.m1if13.users.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,9 +24,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final UserDetailsService userDetailsService;
+    private final UserDao userDao;
 
-    public JwtAuthenticationFilter(UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(UserDetailsService userDetailsService, UserDao userDao) {
         this.userDetailsService = userDetailsService;
+        this.userDao = userDao;
         this.jwtService = new JwtService();
     }
 
@@ -46,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 try {
                     userDetails = this.userDetailsService.loadUserByUsername(userLogin);
 
-                    if (jwtService.isTokenValid(jwt, userDetails)) {
+                    if (jwtService.isTokenValid(jwt, userDetails) && userDetails.isEnabled() && userDao.findByLogin(userLogin).get().isConnected()){
                         // Création de l'objet UsernamePasswordAuthenticationToken
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
