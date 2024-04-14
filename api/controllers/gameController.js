@@ -1,8 +1,7 @@
 // gameController.js
 
-import axios from 'axios';
-import { getGameResources } from '../data/gameResource';
-import { getZrrData } from '../data/zrr';
+import { getGameResources } from '../models/gameResource.js';
+import { getZrrData } from '../models/zrr.js';
 
 // Mise à jour de la position du joueur
 const updatePosition = async (req, res) => {

@@ -1,8 +1,8 @@
 // adminController.js
 
 import axios from 'axios';
-import { setZrrData } from '../data/zrr';
-import { getGameResources } from '../data/gameResource';
+import { setZrrData } from '../models/zrr.js';
+import { getGameResources } from '../models/gameResource.js';
 
 // Fixer les limites du village ZRR
 const setZrr = async (req, res) => {
