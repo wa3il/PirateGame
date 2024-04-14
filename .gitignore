@@ -4,8 +4,10 @@
 # Ignore les dossiers générés par Node.js
 /api/node_modules/
 /admin/node_modules/
+/client/node_modules/
 /api/.DS_Store
 /admin/.DS_Store
+/client/.DS_Store
 
 # Ignorer les fichiers spécifiques à IntelliJ IDEA
 .idea/
