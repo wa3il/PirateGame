@@ -1,4 +1,5 @@
 // index.js
+console.log('Current directory:', process.cwd());
 
 import express from 'express';
 import path from 'path';
@@ -19,8 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // Routes
-app.use('/api', gameRoutes);
-app.use('/admin', adminRoutes);
+app.use('/api/admin', adminRoutes); // Routes d'administration avec validation
+app.use('/api/game', gameRoutes); // Routes de jeu avec validation
 
 // Middleware pour gérer les erreurs 404
 app.use((req, res) => {
