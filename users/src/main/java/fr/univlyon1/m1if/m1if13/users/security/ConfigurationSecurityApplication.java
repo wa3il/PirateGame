@@ -36,6 +36,7 @@ public class ConfigurationSecurityApplication {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers(POST, "/users").permitAll()
                         .requestMatchers(POST, "/users/login").permitAll()
+                        .requestMatchers(GET, "/users/authenticate").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

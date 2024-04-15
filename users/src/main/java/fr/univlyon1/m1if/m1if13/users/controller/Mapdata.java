@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if13.users.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationRequest;
 import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
 import fr.univlyon1.m1if.m1if13.users.model.Species;
 import org.springframework.http.MediaType;
@@ -66,5 +67,31 @@ public class Mapdata {
         return Optional.empty();
 
     }
+
+    public static Optional<AuthenticationRequest> getAuthRequest(String requestBody, String contentType) throws JsonProcessingException {
+        if (contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            AuthenticationRequest authRequest = objectMapper.readValue(requestBody, AuthenticationRequest.class);
+            if (authRequest.getToken() == null) {
+                return Optional.empty();
+            } else {
+                return Optional.of(authRequest);
+            }
+        }
+        if (contentType.contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
+            Map<String, String> formData = extractFormData(requestBody);
+            String token = formData.get("token");
+            AuthenticationRequest authRequest = new AuthenticationRequest(token);
+            if (token == null) {
+                return Optional.empty();
+            }else {
+                authRequest.setToken(token);
+                return Optional.of(authRequest);
+            }
+        }
+        return Optional.empty();
+
+    }
+
+
 
 }

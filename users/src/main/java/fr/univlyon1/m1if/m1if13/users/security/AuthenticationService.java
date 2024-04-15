@@ -73,8 +73,20 @@ public class AuthenticationService {
         });
     }
 
-    public Set<String> getAlluserDao() {
-        return userDao.getAll();
+    public boolean tokenUserConnected(String token){
+        String login = jwtService.extractUserLogin(token);
+        Optional<User> user = userDao.findByLogin(login);
+        if(user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        else if (user.get().getJwt() == null) {
+            throw new RuntimeException("User not connected");
+        }else if (!user.get().getJwt().equals(token)){
+            throw new RuntimeException("Token not valid");
+        }else {
+            return true;
+        }
     }
+
 }
 

@@ -1,7 +1,7 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.univlyon1.m1if.m1if13.users.dao.Dao;
+import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationRequest;
 import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationResponse;
 import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
 import fr.univlyon1.m1if.m1if13.users.security.AuthenticationService;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getAuthRequest;
 import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getUserDtoRequest;
 
 @Controller
@@ -66,13 +67,37 @@ public class UsersOperationsController {
 
     /**
      * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
+     * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
+     */
+    @GetMapping(value = "/authenticate",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<Void> authenticate(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+        Optional<AuthenticationRequest> authRequest = getAuthRequest(requestBody, contentType);
+        if (authRequest.isPresent()) {
+            try {
+                authenticationService.tokenUserConnected(authRequest.get().getToken());
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    /*
+
+     * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
      * @param jwt Le token JWT qui se trouve dans le header "Authorization" de la requête
      * @param origin L'origine de la requête (pour la comparer avec celle du client, stockée dans le token JWT)
      * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
-     */
+
     @GetMapping("/authenticate")
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") String jwt, @RequestParam("origin") String origin) {
         // TODO
         return null;
     }
+
+     */
+
 }
