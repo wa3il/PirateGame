@@ -1,7 +1,6 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationRequest;
 import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationResponse;
 import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
 import fr.univlyon1.m1if.m1if13.users.security.AuthenticationService;
