@@ -5,6 +5,7 @@ import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationResponse;
 import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
 import fr.univlyon1.m1if.m1if13.users.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getAuthRequest;
 import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getUserDtoRequest;
 
 @Controller

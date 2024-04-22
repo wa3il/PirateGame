@@ -1,0 +1,184 @@
+swagger: "2.0"
+info:
+  description: "A guidance API to the magic potion."
+  version: "1.0.0"
+  title: "The Pirate's Curse"
+  license:
+    name: "CC-BY-NC"
+    url: "http://creativecommons.org/licenses/by-nc/4.0/"
+  contact:
+    name: "Lionel Médini"
+    url: "https://perso.liris.cnrs.fr/lionel.medini"
+schemes:
+- "https"
+host: "192.168.75.xx"
+basePath: "/api/game"
+tags:
+- name: "georesources"
+  description: "Server-side geolocalized resources"
+- name: "ZRR"
+  description: "Game area"
+
+paths:
+  /resources:
+    get:
+      tags:
+      - "georesources"
+      summary: "Get all resources"
+      description: "Returns an array containing the representations of all existing resources in the game. \nNote: it may be useful for the game client to directly receive only the list of potions + only the other players of his/her team."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GeoResource"
+        401:
+          description: "User authentication failed"
+      security:
+      - bearerAuth: []
+  /resources/{resourceId}:
+    post:
+      tags:
+      - "georesources"
+      summary: "Operate on a given resource"
+      description: "Villagers and pirates can grab potion flasks, villager can eliminate pirates, or pirate can turn villagers into pirates"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "path"
+        description: "resource ID"
+        required: true
+        type: "string"
+      - name: "operationType"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/OperationType"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid operation type or resource is not operable by user at this moment"
+        401:
+          description: "User authentication failed"
+        403:
+          description: "User too far from resource to grab it"
+        404:
+          description: "Resource not found"
+      security:
+      - bearerAuth: []
+  /resources/{resourceId}/position:
+    put:
+      tags:
+      - "georesources"
+      summary: "Update user's position"
+      description: "Send a LatLng object to the server."
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "path"
+        description: "User's login"
+        required: true
+        type: "string"
+      - name: position
+        in: "body"
+        description: "User's position"
+        required: true
+        schema:
+          $ref: "#/definitions/LatLng"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid position object"
+        401:
+          description: "User authentication failed"
+        403:
+          description: "User not authorized to update resource"
+        404:
+          description: "User not found"
+      security:
+      - bearerAuth: []
+
+  /zrr:
+    get:
+      tags:
+      - "ZRR"
+      summary: "Get ZRR limits"
+      description: "Returns an array containing 4 LatLng objects corresponding to the ZRR corners"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LatLng"
+        404:
+          description: "No ZRR defined yet"
+      security:
+      - bearerAuth: []
+
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+
+definitions:
+  GeoResource:
+    type: "object"
+    required:
+    - "id"
+    - "position"
+    properties:
+      id:
+        type: "string"
+        description: "User login or other resource id"
+        example: "toto"
+      position:
+        $ref: "#/definitions/LatLng"
+      role:
+        type: "string"
+        description: "Resource role in the game"
+        enum:
+        - "VILLAGEOIS"
+        - "PIRATE"
+        - "FLASK"
+      ttl:
+        type: "integer"
+        description: "For grabbed potion flasks only: remaining time in seconds before it stops having effect"
+      potions:
+        type: "integer"
+        description: "For villagers and pirates: number of potion flasks grabbed"
+      terminated:
+        type: "integer"
+        description: "For villagers only: number of pirates terminated"
+      turned:
+        type: "integer"
+        description: "For pirates only: number of villagers turned into pirates"
+  LatLng:
+    type: "array"
+    items:
+      type: "number"
+    minItems: 2
+    maxItems: 2
+    description: "LatLng object as defined in Leaflet"
+    example: "[45.781987907026334, 4.865596890449525]"
+  OperationType:
+    type: "string"
+    description: "Type of operation to perform on a resource"
+    enum:
+    - "grab potion flask"
+    - "terminate pirate"
+    - "turn villager into pirate"
+
+externalDocs:
+  description: "See M1IF13 practicals 2024 #3"
+  url: "https://forge.univ-lyon1.fr/LIONEL.MEDINI/m1if13-2024/-/tree/master/tp3"
