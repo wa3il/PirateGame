@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -31,19 +30,19 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponse register(UserRequestDto userRequestDto) {
+    public AuthenticationResponse register(UserRequestDto userRequestDto, String origin) {
         User user = new User(userRequestDto.getLogin(),userRequestDto.getSpecies(), passwordEncoder.encode(userRequestDto.getPassword()));
         if (userDao.findByLogin(userRequestDto.getLogin()).isPresent()) {
             throw new RuntimeException("User already exists");
         }
         user.setConnected(true);
-        String jwt = jwtService.generateToken(user);
+        String jwt = jwtService.generateToken(user, origin);
         user.setJwt(jwt);
         userDao.save(user);
         return new AuthenticationResponse(jwt);
     }
 
-    public AuthenticationResponse authenticate(UserRequestDto userRequestDto) {
+    public AuthenticationResponse authenticate(UserRequestDto userRequestDto, String origin) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userRequestDto.getLogin(),
@@ -59,7 +58,7 @@ public class AuthenticationService {
         }
         else {
             user.get().setConnected(true);
-            String jwt = jwtService.generateToken(user.get());
+            String jwt = jwtService.generateToken(user.get(), origin);
             user.get().setJwt(jwt);
             return new AuthenticationResponse(jwt);
         }
@@ -73,18 +72,17 @@ public class AuthenticationService {
         });
     }
 
-    public boolean tokenUserConnected(String token){
+    public void tokenUserConnected(String token, String origin){
         String login = jwtService.extractUserLogin(token);
+        String userOrigin = jwtService.extractUserOrigin(token);
         Optional<User> user = userDao.findByLogin(login);
         if(user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
         else if (user.get().getJwt() == null) {
             throw new RuntimeException("User not connected");
-        }else if (!user.get().getJwt().equals(token)){
+        }else if (!user.get().getJwt().equals(token) || !userOrigin.equals(origin)){
             throw new RuntimeException("Token not valid");
-        }else {
-            return true;
         }
     }
 

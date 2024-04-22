@@ -73,10 +73,10 @@ public class UserResourceController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
             )
-    public ResponseEntity<AuthenticationResponse> createUser(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+    public ResponseEntity<AuthenticationResponse> createUser(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType, @RequestHeader("Origin") String origin) throws JsonProcessingException {
         Optional<UserRequestDto> userRequestDto = getUserDtoRequest(requestBody, contentType);
         if (userRequestDto.isPresent()) {
-            return ResponseEntity.ok(authService.register(userRequestDto.get()));
+            return ResponseEntity.ok(authService.register(userRequestDto.get(), origin));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

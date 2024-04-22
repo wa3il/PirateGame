@@ -27,14 +27,15 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, String origin) {
+        return generateToken(new HashMap<>(), userDetails, origin);
     }
 
-    public String generateToken(Map<String, Object> ExtraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> ExtraClaims, UserDetails userDetails, String origin) {
         return Jwts.builder()
                 .setClaims(ExtraClaims)
                 .setSubject(userDetails.getUsername())
+                .setIssuer(origin)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // 1 day
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -66,5 +67,9 @@ public class JwtService {
     private Key getSigningKey() {
         byte[] KeyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(KeyBytes);
+    }
+
+    public String extractUserOrigin(String token) {
+        return extractClaim(token, Claims::getIssuer);
     }
 }
