@@ -3,12 +3,12 @@ console.log('Current directory:', process.cwd());
 
 import express from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url'; // Nouvelle importation pour obtenir le chemin du fichier
+import { fileURLToPath } from 'url';
 import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
-const __filename = fileURLToPath(import.meta.url); // Obtenez le nom de fichier actuel
-const __dirname = path.dirname(__filename); // Obtenez le répertoire actuel
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 3376;

@@ -1,4 +1,4 @@
-import axios from '../config/axiosConfig.js';
+import jwtService from '../services/JwtService.js';
 
 // Middleware pour valider l'identité de l'utilisateur avec Spring
 const validateIdentity = async (req, res, next) => {
@@ -9,10 +9,9 @@ const validateIdentity = async (req, res, next) => {
 	}
 
 	try {
-		const response = await axios.post('/validateToken', { token });
-
-		if (response.data.valid) {
-			next();
+		const isValid = jwtService.verifyToken(token); // Vérifie si le token est valide
+		if (isValid) {
+			next(); // Token valide, passe au middleware suivant
 		} else {
 			return res.status(401).json({ message: 'Invalid authorization token' });
 		}

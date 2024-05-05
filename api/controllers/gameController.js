@@ -1,6 +1,6 @@
 // gameController.js
 
-import axios from 'axios'; // Importer axios pour les requêtes HTTP
+import axios from 'axios';
 import { getGameResources } from '../models/gameResource.js';
 
 // Mise à jour de la position du joueur
