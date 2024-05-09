@@ -2,6 +2,7 @@
 
 import resourceDao from '../DAO/resourceDao.js';
 import zrrDao from '../DAO/zrrDao.js';
+import validateUser from '../middlewares/authMiddleware.js';
 //import e from 'express';
 
 
@@ -9,6 +10,13 @@ import zrrDao from '../DAO/zrrDao.js';
 //Get /resources
 const getResources = async (req, res) => {
 	try {
+		const token = req.headers.authorization;
+		const origin = req.headers.origin;
+		const isValidUser = await validateUser(token, origin);
+		if (!isValidUser) {
+			res.status(401).json({ message: 'Unauthorized' });
+			return;
+		}
 		const allResources = resourceDao.getAll();
 		res.status(200).json(allResources);
 	} catch (error) {
@@ -76,15 +84,13 @@ const operateResource = async (req, res) => {
 const getZrrLimits = async (req, res) => {
 	try {
 		const zrrLimits = zrrDao.get();
-		if (!zrrLimits) {
-			res.status(404).json({ message: 'No ZRR defined yet' });
-		}
-		else {
-			res.status(200).json(zrrLimits);		
-		}
-		
+		res.status(200).json(zrrLimits);
 	} catch (error) {
-		res.status(500).json({ message: error.message });
+		if (error.message === 'No Zrr exists') {
+			res.status(404).json({ message: 'No Zrr exists' });
+		} else {
+			res.status(500).json({ message: error.message });
+		}
 	}
 };
 

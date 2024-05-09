@@ -1,36 +1,40 @@
 // Description: Service de gestion de la zone de jeu.
-import Zrr from '../models/Zrr.js';
 
-let zrr = null; // Il n'y a qu'une seule ZRR dans votre jeu
+
+let zrr = []; // Il n'y a qu'une seule ZRR dans votre jeu
 
 const zrrDao = {
 	// Créer une nouvelle ZRR
 	create: (point1, point2) => {
-		if (!zrr) {
-			zrr = new Zrr(point1, point2);
+		if (zrr.length === 0) {
+			zrr.push([point1, point2]);
 			return zrr;
+		} else {
+			throw new Error('Zrr already exists');
 		}
-		return null; // Une ZRR existe déjà
 	},
 
 	// Lire la ZRR
 	get: () => {
+		if (zrr.length === 0) {
+			throw new Error('No Zrr exists');
+		}
 		return zrr;
 	},
 
 	// Mettre à jour la ZRR
 	update: (point1, point2) => {
-		if (zrr) {
-			zrr.point1 = point1;
-			zrr.point2 = point2;
-			return zrr;
+		if (zrr.length === 0) {
+			throw new Error('No Zrr exists');
 		}
-		return null; // Aucune ZRR à mettre à jour
+		zrr[0] = [point1, point2];
+		return zrr;
 	},
 
 	// Supprimer la ZRR
 	delete: () => {
 		zrr = null;
+		return zrr;
 	}
 };
 

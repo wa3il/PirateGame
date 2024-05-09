@@ -16,12 +16,23 @@ const app = express();
 const port = 3376;
 
 // Créer une nouvelle ressource et zrr test
-resourceDao.create('toto', [45.781987907026334, 4.865596890449525], 'VILLAGEOIS', 0, 0, 0, 0);
-zrrDao.create([45.781987907026334, 4.865596890449525]);
+resourceDao.create('toto', [4.5, 4], 'VILLAGEOIS', 0, 0, 0, 0);
+zrrDao.create(45.781987907026334, 4.865596890449525);
 
 
 // Middleware for serving static files
 app.use('/static', express.static(path.join(__dirname, 'public')));
+
+app.use('/', (req, res, next) => {
+	// Vérifier si le chemin demandé est la racine
+	if (req.path === '/') {
+		// Si le chemin est la racine, rediriger vers la page d'accueil (index.html ou autre fichier selon votre configuration)
+		res.redirect('/static/index.html'); // Assurez-vous d'ajuster le chemin selon votre structure de fichiers
+	} else {
+		// Si le chemin n'est pas la racine, passer au middleware suivant
+		next();
+	}
+});
 
 // Middleware pour le parsing du JSON
 app.use(express.json());
