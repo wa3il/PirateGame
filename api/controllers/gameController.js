@@ -5,7 +5,6 @@ import zrrDao from '../DAO/zrrDao.js';
 //import e from 'express';
 
 
-
 // Récupération de la liste des ressources géolocalisées 
 //Get /resources
 const getResources = async (req, res) => {
@@ -24,8 +23,19 @@ const updatePosition = async (req, res) => {
 	const { id } = req.params;
 	const { position } = req.body;
 	try {
-		resourceDao.updatePosition(id, position);
-		res.status(204).json({message: 'Position updated'});
+		if (!position || !Array.isArray(position) || position.length !== 2){
+			res.status(400).json({ message: 'Position is required' });
+		}
+		else if (typeof position[0] !== 'number' || typeof position[1] !== 'number') {
+			res.status(400).json({ message: 'Position must be an array of 2 numbers' });
+		}
+		else if (position[0] < zrrDao.zrr.point1[0] || position[0] > zrrDao.zrr.point2[0] || position[1] < zrrDao.zrr.point1[1] || position[1] > zrrDao.zrr.point2[1]){
+			res.status(400).json({ message: 'Position is out of ZRR' });
+		}
+		else {		
+			resourceDao.updatePosition(id, position);
+			res.status(204).json({message: 'Position updated'});
+		}
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
@@ -66,7 +76,13 @@ const operateResource = async (req, res) => {
 const getZrrLimits = async (req, res) => {
 	try {
 		const zrrLimits = zrrDao.get();
-		res.status(200).json(zrrLimits);
+		if (!zrrLimits) {
+			res.status(404).json({ message: 'No ZRR defined yet' });
+		}
+		else {
+			res.status(200).json(zrrLimits);		
+		}
+		
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
