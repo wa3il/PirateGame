@@ -1,13 +1,8 @@
-// zrr.js
-
-let zrr = null;
-
-const setZrrData = (data) => {
-	zrr = data;
-};
-
-const getZrrData = () => {
-	return zrr;
-};
-
-export { setZrrData, getZrrData };
+class Zrr {
+	constructor(point1, point2) {
+		this.point1 = point1;
+		this.point2 = point2;
+	}
+}
+  
+export default Zrr;
