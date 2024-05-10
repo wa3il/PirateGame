@@ -2,21 +2,12 @@
 
 import resourceDao from '../DAO/resourceDao.js';
 import zrrDao from '../DAO/zrrDao.js';
-import validateUser from '../middlewares/authMiddleware.js';
-//import e from 'express';
 
 
 // Récupération de la liste des ressources géolocalisées 
 //Get /resources
 const getResources = async (req, res) => {
 	try {
-		const token = req.headers.authorization;
-		const origin = req.headers.origin;
-		const isValidUser = await validateUser(token, origin);
-		if (!isValidUser) {
-			res.status(401).json({ message: 'Unauthorized' });
-			return;
-		}
 		const allResources = resourceDao.getAll();
 		res.status(200).json(allResources);
 	} catch (error) {
