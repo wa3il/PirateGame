@@ -20,12 +20,14 @@ const setZrrLimits = async (req, res) => {
 
 
 //préciser le TTL initial (valeur par défaut : 1 minute)
-// post /resources/:id/ttl
+// post /ressources/ttl
 const setTTL = async (req, res) => {
-    const { id } = req.params;
     const { ttl } = req.body;
     try {
-        const resource = resourceDao.setTTL(id, ttl);
+        if (!ttl) {
+            throw new Error('TTL is not set');
+        }
+        resourceDao.ttl = ttl;
         res.status(200).json(resource);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -41,7 +43,7 @@ const triggerPotion = async (req, res) => {
             throw new Error('No Zrr exists');
         }
         let position = [Math.floor(Math.random() * (zrrDao.limiteNE.x - zrrDao.limiteNO.x + 1)) + zrrDao.limiteNO.x, Math.floor(Math.random() * (zrrDao.limiteSE.y - zrrDao.limiteNE.y + 1)) + zrrDao.limiteNE.y];
-        if(resourceDao.ttll === 0){
+        if(resourceDao.ttl === 0){
             throw new Error('TTL is not set yet');
         }
         const resource = resourceDao.create(null, position, 'fiole', zrrDao.ttl, null, false, false);

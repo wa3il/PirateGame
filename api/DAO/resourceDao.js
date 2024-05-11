@@ -40,17 +40,11 @@ const resourceDao = {
 		return null;
 	},
 
-	//set TTL initial
-	setTTL: (id , ttl) => {
-		const resource = resources.find(resource => resource.id === id);
-		if (resource.role === 'fiole') {
-			resource.ttl = ttl;
-			this.ttl = ttl;
-			return resource;
-		}
-		else {
-			throw new Error('This resource is not a potion');
-		}
+	//set TTL initial pour les ressources
+	setTTL: (ttl) => {
+		resourceDao.ttl = ttl;
+		//pour les ressources existantes de type fiole, mettre à jour le TTL
+		resources.filter(resource => resource.role === 'fiole').forEach(resource => resource.ttl = ttl);
 	},
 
 	//Update position
