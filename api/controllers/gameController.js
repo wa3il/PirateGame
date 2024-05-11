@@ -4,6 +4,8 @@ import resourceDao from '../DAO/resourceDao.js';
 import zrrDao from '../DAO/zrrDao.js';
 
 
+let ttl = 0; // TTL initial (valeur par défaut : 1 minute)
+
 // Récupération de la liste des ressources géolocalisées 
 //Get /resources
 const getResources = async (req, res) => {
