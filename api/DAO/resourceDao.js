@@ -119,11 +119,11 @@ const resourceDao = {
 	},
 
 	// Réinitialiser l'état des fioles prises par un joueur
-    resetTakenFioles: () => {
-        resources.filter(resource => resource.role === 'fiole' && resource.taken).forEach(fiole => {
-            fiole.taken = false;
-        });
-    },
+	resetTakenFioles: () => {
+		resources.filter(resource => resource.role === 'fiole' && resource.taken).forEach(fiole => {
+			fiole.taken = false;
+		});
+	},
 	
 
 	//Update les fioles 
@@ -138,11 +138,11 @@ const resourceDao = {
 				}
 			});
 		}).filter(resource => resource.role === 'fiole' && resource.taken).forEach(fiole => {
-		fiole.ttl--;
-		if (fiole.ttl === 0) {
-			fiole.delete(fiole.id);
-		}
-	}),
+			fiole.ttl--;
+			if (fiole.ttl === 0) {
+				fiole.delete(fiole.id);
+			}
+		}),
 
 
 	// Delete a resource

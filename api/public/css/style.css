@@ -1,0 +1,77 @@
+@font-face {
+	font-family: Elanor-ExtraBoldItalic;
+	src: url(./fonts/ElanorFreePersonalUse-ExBdIt.otf);
+}
+
+@font-face {
+	font-family: Elanor-ExtraLight;
+	src: url(./fonts/ElanorFreePersonalUse-ExtLt.otf);
+}
+
+@font-face {
+	font-family: sonder;
+	src: url(./fonts/SonderRegular.otf);
+}
+
+body {
+	background-color: #081F1F;
+	color: silver;
+	font-family: Elanor-ExtraLight;
+	padding: 0 5% 0 5%;
+}
+
+.b {
+	background-image: url('../img/guilde.jpg');
+	background-size: cover;
+	background-blend-mode: screen;
+	opacity: 1;
+}
+
+h1 {
+	color: gray;
+	font-family: sonder;
+	font-weight: bolder;
+	font-size: 4.5em;
+	text-shadow: 3px 3px 5px ghostwhite;
+}
+
+h2 {
+	font-family: sonder;
+	font-weight: bold;
+	font-size: 2em;
+}
+
+a:link {
+	color: grey;
+}
+
+#map {
+	height: 400px;
+	width: 100%;
+	border: 1px solid;
+}
+
+input, input[type=submit], select {
+	background-color: #2F4F4F !important;
+	color: lightgray;
+	border: 1px solid;
+	border-radius: 5px;
+}
+
+.elanor {
+	font-family: Elanor-ExtraBoldItalic;
+	font-size: 0.8em;
+}
+
+.content {
+	background-color: #081F1F;
+	border: 1px solid;
+	padding: 5px;
+	width: 100%;
+}
+
+.icon {
+	width: 50px;
+	border-radius: 50%;
+	opacity: 50%;
+}

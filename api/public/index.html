@@ -1,11 +1,101 @@
-<!-- public/index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
-</head>
-<body>
-<h1>Welcome to Our Game</h1>
-</body>
+<!doctype html>
+<html lang="fr">
+    <head>
+		<meta charset="UTF-8">
+        <title>La guilde des trouvailles - Confidentiel</title>
+		<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="css/style.css"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body class="b">
+		<header>
+			<h1>La guilde des trouvailles <span class="elanor">Confidentiel</span></h1>
+		</header>
+
+		<section>
+			<h2>Carte</h2>
+			<p class="content"><span class="elanor">TODO:</span> mettre à jour les positions des différents objets sur la carte.</p>
+			<div id="map"></div>
+		</section>
+
+		<section>
+			<h2>ZRR</h2>
+			<div class="content">
+				<p><span class="elanor">TODO:</span> modifier ce formulaire pour que les valeurs s'affichent dans le formulaire quand on clique sur la carte et que le bouton "Send" appelle la bonne fonctionnalité de votre serveur Express.</p>
+				<p>Appuyez sur "Set" pour sélectionner un point de la carte :</p>
+				<form id="setCorner1" onsubmit="return updateCorner1();" class="pure-form">
+					<fieldset>
+						<input type="submit" value="Set" class="pure-button pure-button-active">&nbsp;&nbsp;
+						<label for="lat1">Lattitude : </label> <input type="text" id="lat1" name="lat1">&nbsp;&nbsp;
+						<label for="lon1">Longitude : </label> <input type="text" id="lon1" name="lon1">
+					</fieldset>
+		<span class="elanor">TODO:</span>		</form>
+				<form id="setCorner2" onsubmit="return updateCorner2();" class="pure-form">
+					<fieldset>
+						<input type="submit" value="Set" class="pure-button pure-button-active">&nbsp;&nbsp;
+						<label for="lat2">Lattitude : </label> <input type="text" id="lat2" name="lat2">&nbsp;&nbsp;
+						<label for="lon2">Longitude : </label> <input type="text" id="lon2" name="lon2">
+					</fieldset>
+				</form>
+				<form id="sendZrr" onsubmit="return sendZrr();" class="pure-form">
+					<fieldset>
+						<label for="sendZrr">Valider la position de la ZRR : </label>&nbsp;&nbsp;
+						<input type="submit" name="sendZrr" value="Send" class="pure-button pure-button-active">
+					</fieldset>
+				</form>
+			</div>
+		</section>
+
+		<section>
+			<h2>Paramètres</h2>
+			<div class="content">
+				<p><span class="elanor">TODO:</span> Mettre en place les scripts nécessaires au fonctionnement de l'interface et à l'appel de l'API du jeu.</p>
+				<form id="setTtl" onsubmit="return setTtl();" class="pure-form">
+					<fieldset>
+						<label for="ttl">Temps de Tranquillité et de Liberté (TTL) par défaut : </label> <input type="number" min="0" max="180" value="60" id="ttl" name="ttl">&nbsp;&nbsp;
+						<input type="submit" name="setTtl" value="Set" class="pure-button pure-button-active">
+					</fieldset>
+				</form>
+				<form id="setTreasureType" onsubmit="return sendTreasure();" class="pure-form">
+					<fieldset>
+						<label for="treasureType">Type de trésor : </label> <select name="treasureType" id="pet-select">
+						    <option value="lune" selected>potion de lune</option>
+						    <option value="dissimulation">potion de dissimulation</option>
+						    <option value="Bêta-X">Bêta-X</option>
+						</select>
+						<br>
+						<label for="sendTreasure">Passer en mode de déclenchement d'impact (démarre le jeu) : </label> 
+						<input type="submit" name="sendTreasure" value="Feu!" class="pure-button pure-button-active">
+					</fieldset>
+				</form>
+			</div>
+		</section>
+
+		<section>
+			<h2>Aventurier</h2>
+			<div class="content">
+				<p><span class="elanor">TODO:</span> placer ici les informations sur le joueur et les liens pour les modifier. Exemple :</p>
+				<div>
+					<a href="javascript:updateImage('Toto');"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Pediculus_humanus_var_capitis.jpg/800px-Pediculus_humanus_var_capitis.jpg?uselang=fr" alt="Pediculus humanus var capitis AKA head louse; public domain from http://phil.cdc.gov/" class="icon"></a>&nbsp;&nbsp;-&nbsp;&nbsp;
+					<a href="javascript:updateName('Toto');">Toto</a>&nbsp;&nbsp;-&nbsp;&nbsp;
+					<strong>TTL</strong> : 180s&nbsp;&nbsp;-&nbsp;&nbsp;
+					<strong>Trophys</strong> : none
+				</div>
+				<form id="addUser" onsubmit="return sendTreasure();" class="pure-form">
+					<fieldset>
+						<label for="addUser">Inscrire un joueur dans la ZRR : </label> 
+						<input type="submit" name="addUser" value="Add" class="pure-button pure-button-active">
+					</fieldset>
+				</form>
+			</div>
+		</section>
+		<section>
+			<p><span class="elanor">Credits:</span> Photo by <a href="https://unsplash.com/@jplenio?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Johannes Plenio</a> on <a href="https://unsplash.com/collections/CKvwqealkTc/enchanted-forest?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>. Fonts by <span class="elanor"><a href="https://dirtylinestudio.com/product/elanor-free-font/">Dirtyline studio</a></span> and <span style="font-family: sonder"><a href="https://www.awwwards.com/inspiration/sonder-regular-free-font">Awwwards</a></span>.</p>
+		</section>
+    <script src="./js/map.js"></script>
+    <script src="./js/form.js"></script>
+  </body>
 </html>
