@@ -4,8 +4,6 @@ import resourceDao from '../DAO/resourceDao.js';
 import zrrDao from '../DAO/zrrDao.js';
 
 
-let ttl = 0; // TTL initial (valeur par défaut : 1 minute)
-
 // Récupération de la liste des ressources géolocalisées 
 //Get /resources
 const getResources = async (req, res) => {
@@ -16,6 +14,8 @@ const getResources = async (req, res) => {
 		res.status(500).json({ message: error.message });
 	}
 };
+
+
 
 // Mise à jour de la position du joueur
 //Put /resources/:id/position 
@@ -47,22 +47,28 @@ const updatePosition = async (req, res) => {
 // Récupération d'une fiole
 //TODO : Condition si joueur est proche <5m à rajouter 
 const operateResource = async (req, res) => {
+	//ID JOUEUR
 	const { id } = req.params;
 	const { action } = req.body;
 	try {
 		const resource = resourceDao.getById(id);
 		if (resource) {
 			if (action === 'grab potion flask') {
-				//resourceDao.addFiole(iduser,idfiole);
-				res.status(204);
+				//on vérifie si le joueur est proche de la fiole
+				let fioles = resourceDao.grabPotions(id);
+				if (fioles.length === 0) {
+					res.status(404).json({ message: 'No potion flask nearby' });
+				} else {
+					res.status(204).json(fioles);
+				}
 			}
 			else if (action === 'terminate pirate') {
-				//resourceDao.terminatePirate(id);
-				res.status(204);
+				resourceDao.terminatePirate(id);
+				res.status(204).json({ message: 'Pirate terminated' });
 			}
 			else if (action === 'turn villager into pirate') {
-				//resourceDao.turnIntoPirate(id);
-				res.status(204);
+				resourceDao.turnIntoPirate(id);
+				res.status(204).json({ message: 'Villager turned into pirate' });
 			}
 			else {
 				res.status(400).json({ message: 'Action not found' });

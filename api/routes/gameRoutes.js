@@ -2,16 +2,16 @@
 
 import express from 'express';
 import gameController from '../controllers/gameController.js';
-import validateIdentity from '../middlewares/authMiddleware.js';
+//import validateIdentity from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(validateIdentity);
+//router.use(validateIdentity);
 
 //get all resources
 router.get('/resources', gameController.getResources);
 
-//Post an ation on resource
+//Post an action on resource
 router.post('/resources/:id', gameController.operateResource);
 
 //Update user Position
