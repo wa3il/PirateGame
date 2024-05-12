@@ -14,7 +14,6 @@ router.post('/zrr', adminController.setZrrLimits);
 //Set TTL
 router.post('/resources/ttl', adminController.setTTL);
 
-
 //Trigger potion
 router.post('/triggerPotion', adminController.triggerPotion);
 

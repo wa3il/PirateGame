@@ -1,0 +1,213 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080/users_war_exploded
+    description: Generated server url
+paths:
+  /users/{login}:
+    get:
+      tags:
+        - user-resource-controller
+      operationId: getUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: object
+    put:
+      tags:
+        - user-resource-controller
+      operationId: updateUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+        - user-resource-controller
+      operationId: deleteUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /users:
+    get:
+      tags:
+        - user-resource-controller
+      operationId: getAllUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+            application/xml:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+    post:
+      tags:
+        - user-resource-controller
+      operationId: createUser
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Origin
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+  /users/logout:
+    post:
+      tags:
+        - users-operations-controller
+      operationId: logout
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+  /users/login:
+    post:
+      tags:
+        - users-operations-controller
+      operationId: login
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: origin
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+  /users/authenticate:
+    get:
+      tags:
+        - users-operations-controller
+      operationId: authenticate
+      parameters:
+        - name: jwt
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: origin
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    AuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
