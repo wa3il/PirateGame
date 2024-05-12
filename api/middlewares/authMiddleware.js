@@ -1,25 +1,48 @@
-import axios from '../config/axiosConfig.js';
+import axios from 'axios';
 
-// Middleware pour valider l'identité de l'utilisateur avec Spring
-const validateIdentity = async (req, res, next) => {
-	const token = req.headers.authorization;
+const SPRING_SERVER_URL = 'http://localhost:8080';
+const predefinedOrigin = 'http://localhost:8080/'; // Origine prédéfinie pour les tests
 
-	if (!token) {
-		return res.status(401).json({ message: 'Missing authorization token' });
-	}
-
+async function verifUser(token, origin) {
 	try {
-		const response = await axios.post('/validateToken', { token });
-
-		if (response.data.valid) {
-			next();
-		} else {
-			return res.status(401).json({ message: 'Invalid authorization token' });
+		// Si le token est invalide ou n'est pas au format attendu, renvoyer false
+		if (!token || !token.startsWith('Bearer ')) {
+			return false;
 		}
+		// Extraire le JWT du token
+		const jwt = token.substring(7);
+		// Utiliser l'origine prédéfinie pour les tests
+		const actualOrigin = origin || predefinedOrigin;
+		// Effectuer la requête pour valider l'utilisateur avec l'origine prédéfinie
+		console.log('Actual Origin:', actualOrigin);
+		console.log('JWT:', jwt);
+
+		const response = await axios.get(`${SPRING_SERVER_URL}/users_war_exploded/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
+		// Vérifier si la réponse est réussie (statut 200 OK)
+		return response.status === 200;
 	} catch (error) {
-		console.error('Error validating token:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		console.error('Erreur de validation de l\'utilisateur :', error.message);
+		return false;
 	}
+}
+
+const validateUser = async (req,res,next) => {
+	const token = req.headers.authorization;
+	const origin = req.headers.origin;
+
+	if(token){
+		const isValidUser = await verifUser(token, origin);
+		if (!isValidUser) {
+			res.status(401).json({ message: 'Unauthorized' });
+			return;
+		}
+		next();
+	}else{
+		res.status(401).json({ message: 'Unauthorized' });
+		return;
+	}
+
 };
 
-export default validateIdentity;
+
+export default validateUser;
