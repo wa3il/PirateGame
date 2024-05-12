@@ -1,3 +1,4 @@
+import './css/style.css';
 import map from './map.js';
 import { initListeners } from './form.js';
 

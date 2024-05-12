@@ -5,7 +5,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import gameRoutes from './routes/gameRoutes.js';
-//import adminRoutes from './routes/adminRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
 
@@ -16,8 +16,10 @@ const app = express();
 const port = 3376;
 
 // Créer une nouvelle ressource et zrr test
-resourceDao.create('toto', [4.5, 4], 'VILLAGEOIS', 0, 0, 0, 0);
-zrrDao.create(45.781987907026334, 4.865596890449525);
+resourceDao.create(1, { x: 10, y: 20 }, 'villageois', 0, false, [], false, false);
+resourceDao.create('toto', { x: 10, y: 5 }, 'pirate', 0, false, [], false, false);
+
+zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
 
 // Middleware for serving static files
@@ -38,7 +40,7 @@ app.use('/', (req, res, next) => {
 app.use(express.json());
 
 // Routes
-//app.use('/admin', adminRoutes); // Routes d'administration avec validation
+app.use('/admin', adminRoutes); // Routes d'administration avec validation
 app.use('/api', gameRoutes); // Routes de jeu avec validation
 
 // Middleware pour gérer les erreurs 404

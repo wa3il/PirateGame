@@ -57,8 +57,27 @@ const zrrDao = {
 			throw new Error('No Zrr exists');
 		}
 		return { limiteNO, limiteNE, limiteSE, limiteSO };
+	},
+
+	//is in ZRR
+	isInZrr: (position) => {	
+		console.log(position);
+		if (!zrr) {
+			throw new Error('No Zrr exists');
+		}
+		console.log(zrr.point1);
+		console.log(zrr.point2);
+		//[ 10, 10 ]
+		//[ 10, 10 ]
+		//{ x: 0, y: 0 }
+		//{ x: 50, y: 50 }
+
+		if (position[0] >= zrr.point1.x && position[0] <= zrr.point2.x && position[1] >= zrr.point1.y && position[1] <= zrr.point2.y) {
+			return true;
+		}
+		return false;
 	}
-	
+
 };
 
 export default zrrDao;

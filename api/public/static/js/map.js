@@ -4,6 +4,8 @@ import { updateLatValue, updateLonValue, updateZoomValue } from './form.js';
 
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
+
+// Création de la map
 let L = window.L;
 let mymap = L.map('map', {
 	center: [lat, lng],

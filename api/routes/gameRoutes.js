@@ -11,6 +11,9 @@ const router = express.Router();
 //get all resources
 router.get('/resources', gameController.getResources);
 
+//get resource by id
+router.get('/resources/:id', gameController.getById);
+
 //Post an action on resource
 router.post('/resources/:id', gameController.operateResource);
 
