@@ -1,20 +1,19 @@
 import Resource from '../models/Resource.js';
 
 let resources = [];
-let potions = [];
 let ttl = 0;
 
 const resourceDao = {
 	// Créer une nouvelle ressource
-	create: (id, position, role, ttl, potionsList = [], terminated, turned) => {
+	create: (id, position, role, ttl, taken ,potionsList = [], terminated, turned) => {
 		// Créez une nouvelle instance de Resource en fonction du rôle
 		let newResource;
 		if (role === 'villageois') {
-			newResource = new Resource(id, position, role, null, { potions: potionsList }, terminated, turned);
+			newResource = new Resource(id, position, role, null, null, { potions: potionsList }, terminated, turned);
 		} else if (role === 'pirate') {
-			newResource = new Resource(id, position, role, null, { potions: potionsList }, terminated, turned);
+			newResource = new Resource(id, position, role, null, null, { potions: potionsList }, terminated, turned);
 		} else if (role === 'fiole') {
-			newResource = new Resource(id, position, role, ttl);
+			newResource = new Resource(id, position, role, ttl, false, null, false, false);
 		}
 		// Ajoutez la nouvelle ressource au tableau de ressources
 		resources.push(newResource);
@@ -58,14 +57,31 @@ const resourceDao = {
 		return null;
 	},
 
+	//get all potions of a player
+	getPotions: (id) => {
+		const resource = resources.find(resource => resource.id === id);
+		if (resource && (resource.role === 'villageois' || resource.role === 'pirate')) {
+			return resource.potions;
+		}
+		else {
+			throw new Error('Resource not a player');
+		}
+	},
+
+	//get potions not taken
+	getPotionsNotTaken: () => {
+		return resources.filter(resource => resource.role === 'fiole' && !resource.taken);
+	},
+
 	//grab potions
 	grabPotions: (idPlayer , distance) => {
 		//ressource Not fiole
 		const player = resources.find(resource => resource.id === idPlayer && resource.role !== 'fiole');
 		if (player) {
-			const nearbyPotions = resources.filter(resource => resource.role === 'fiole' && Math.sqrt(Math.pow(player.position[0] - resource.position[0], 2) + Math.pow(player.position[1] - resource.position[1], 2)) < distance);
+			const nearbyPotions = resources.filter(resource => resource.role === 'fiole' &&  !resource.taken && Math.sqrt(Math.pow(player.position[0] - resource.position[0], 2) + Math.pow(player.position[1] - resource.position[1], 2)) < distance);
 			if (nearbyPotions.length > 0) {
 				nearbyPotions.forEach(potion => {
+					potion.taken = true;
 					player.potions.push(potion);
 				});
 				return nearbyPotions;
@@ -101,7 +117,34 @@ const resourceDao = {
 			throw new Error('Resource not a villager');
 		}
 	},
+
+	// Réinitialiser l'état des fioles prises par un joueur
+    resetTakenFioles: () => {
+        resources.filter(resource => resource.role === 'fiole' && resource.taken).forEach(fiole => {
+            fiole.taken = false;
+        });
+    },
 	
+
+	//Update les fioles 
+	updatePotions:() =>
+		//toutes les ressources de type fiole et toutes les resources villageois et pirates ont les fioles taken auront ttl -1 
+		//on commence par les villageios et pirates .potions 
+		resources.filter(resource => resource.role !== 'fiole').forEach(resource => {
+			resource.potions.forEach(potion => {
+				potion.ttl--;
+				if (potion.ttl === 0) {
+					resource.potions.splice(resource.potions.indexOf(potion), 1);
+				}
+			});
+		}).filter(resource => resource.role === 'fiole' && resource.taken).forEach(fiole => {
+		fiole.ttl--;
+		if (fiole.ttl === 0) {
+			fiole.delete(fiole.id);
+		}
+	}),
+
+
 	// Delete a resource
 	delete: (id) => {
 		const index = resources.findIndex(resource => resource.id === id);
