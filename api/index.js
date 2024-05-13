@@ -27,17 +27,18 @@ const options = {
 			title: "The Pirate's Curse",
 			version: '1.0.0',
 		},
+		tags: [
+			{
+				name: "Ressource Géolocalisée",
+				description: "Operations related to geolocated resources"
+			},
+			{
+				name: "ZRR",
+				description: "Operations related to ZRR"
+			}
+		],
 	},
-	tags: [
-		{
-			name: "Ressource Géolocalisée",
-			description: "Operations related to geolocated resources"
-		},
-		{
-			name: "ZRR",
-			description: "Operations related to ZRR"
-		}
-	],
+	
 	apis: ['./controllers/*.js'], // path to the API files
 };
   
