@@ -1,7 +1,5 @@
 // form.js
 function initListeners(mymap) {
-	console.log("TODO: add more event listeners...");
-
 	document.getElementById("setZrrButton").addEventListener("click", () => {
 		setZrr(mymap);
 	});
@@ -127,7 +125,7 @@ async function setTtl() {
 	};
 
 	try {
-		const response = await fetch('http://localhost:3376/api/ttl', {
+		const response = await fetch('http://localhost:3376/api/resources/ttl', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

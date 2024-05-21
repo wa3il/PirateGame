@@ -4,7 +4,6 @@
 //|__limite-SE
 //|__limite-SO
 
-
 // Path: api/models/Zrr.js
 
 class Zrr {
@@ -13,6 +12,5 @@ class Zrr {
 		this.point2 = point2;
 	}
 }
-
 
 export default Zrr;

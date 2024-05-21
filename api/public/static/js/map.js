@@ -6,7 +6,7 @@ import { updateLatValue, updateLonValue, updateZoomValue } from './form.js';
 const lat = 45.782, lng = 4.8656, zoom = 19;
 
 // Création de la map
-let L = window.L;
+import L from 'leaflet';
 let mymap = L.map('map', {
 	center: [lat, lng],
 	zoom: zoom
@@ -29,7 +29,6 @@ function initMap() {
 
 	// Ajout d'un marker
 	L.marker([45.78207, 4.86559]).addTo(mymap).bindPopup('Entrée du bâtiment<br>Nautibus.').openPopup();
-
 	// Clic sur la carte
 	mymap.on('click', e => {
 		updatePosition(e.latlng.lat, e.latlng.lng, mymap.getZoom());
