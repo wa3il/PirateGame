@@ -38,7 +38,7 @@ app.use('/', (req, res, next) => {
 app.use(express.json());
 
 // Routes
-//app.use('/admin', adminRoutes); // Routes d'administration avec validation
+app.use('/admin', adminRoutes); // Routes d'administration avec validation
 app.use('/api', gameRoutes); // Routes de jeu avec validation
 
 // Middleware pour gérer les erreurs 404
