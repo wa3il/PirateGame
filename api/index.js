@@ -5,7 +5,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import gameRoutes from './routes/gameRoutes.js';
-//import adminRoutes from './routes/adminRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
 

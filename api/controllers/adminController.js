@@ -1,7 +1,7 @@
 // adminController.js
 
-import resourceDao from "../DAO/resourceDao";
-import zrrDao from "../DAO/zrrDao";
+import resourceDao from "../DAO/resourceDao.js";
+import zrrDao from "../DAO/zrrDao.js";
 
 //set Zrr limits
 const setZrrLimits = async (req, res) => {
