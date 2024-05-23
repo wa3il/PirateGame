@@ -1,7 +1,6 @@
 package fr.univlyon1.m1if.m1if13.users.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.univlyon1.m1if.m1if13.users.dao.Dao;
 import fr.univlyon1.m1if.m1if13.users.dto.AuthenticationResponse;
 import fr.univlyon1.m1if.m1if13.users.dto.UserRequestDto;
 import fr.univlyon1.m1if.m1if13.users.security.AuthenticationService;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 import static fr.univlyon1.m1if.m1if13.users.controller.Mapdata.getUserDtoRequest;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UsersOperationsController {
     private final AuthenticationService authenticationService;
@@ -31,14 +30,13 @@ public class UsersOperationsController {
      * parametre login et mdp
      * @return Une ResponseEntity avec le JWT dans le header "Authorization" si le login s'est bien passé, et le code de statut approprié (204, 401 ou 404).
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PostMapping(value = "/login",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType, @RequestHeader String origin) throws JsonProcessingException {
         Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
         if (userRequest.isPresent()) {
-            return ResponseEntity.ok(authenticationService.authenticate(userRequest.get()));
+            return ResponseEntity.ok(authenticationService.authenticate(userRequest.get(),origin));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -47,10 +45,7 @@ public class UsersOperationsController {
     /**
      * Réalise la déconnexion
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
-    @PostMapping(value = "/logout",
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PostMapping(value = "/logout")
     public ResponseEntity<Void> logout(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
         Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
         if (userRequest.isPresent()) {
@@ -62,17 +57,20 @@ public class UsersOperationsController {
     }
 
 
-
-
     /**
      * Méthode destinée au serveur Node pour valider l'authentification d'un utilisateur.
      * @param jwt Le token JWT qui se trouve dans le header "Authorization" de la requête
      * @param origin L'origine de la requête (pour la comparer avec celle du client, stockée dans le token JWT)
      * @return Une réponse vide avec un code de statut approprié (204, 400, 401).
-     */
+    */
     @GetMapping("/authenticate")
     public ResponseEntity<Void> authenticate(@RequestParam("jwt") String jwt, @RequestParam("origin") String origin) {
-        // TODO
-        return null;
+        try {
+              authenticationService.tokenUserConnected(jwt, origin);
+              return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
     }
+
 }
