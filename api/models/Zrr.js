@@ -12,3 +12,5 @@ class Zrr {
         this.point2 = point2;
     }
 }
+
+export default Zrr;
