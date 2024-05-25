@@ -9,19 +9,28 @@ async function verifUser(token, origin) {
 		if (!token || !token.startsWith('Bearer ')) {
 			return false;
 		}
+
 		// Extraire le JWT du token
 		const jwt = token.substring(7);
+		
 		// Utiliser l'origine prédéfinie pour les tests
 		const actualOrigin = origin || predefinedOrigin;
-		// Effectuer la requête pour valider l'utilisateur avec l'origine prédéfinie
-		console.error('actualOrigin', actualOrigin);
-		console.error('jwt', jwt);
 
-		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
+		// Effectuer la requête pour valider l'utilisateur avec l'origine prédéfinie
+		console.log('Actual Origin:', actualOrigin);
+		console.log('JWT:', jwt);
+
+		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate`, {
+			params: {
+				jwt: jwt,
+				origin: actualOrigin
+			}
+		});
+
 		// Vérifier si la réponse est réussie (statut 200 OK)
 		return response.status === 200;
 	} catch (error) {
-		console.error('Erreur de validation de l\'utilisateur :', error.message);
+		console.error('Erreur de validation de l\'utilisateur :', error.response ? error.response.data : error.message);
 		return false;
 	}
 }
