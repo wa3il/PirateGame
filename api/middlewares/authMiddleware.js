@@ -14,8 +14,8 @@ async function verifUser(token, origin) {
 		// Utiliser l'origine prédéfinie pour les tests
 		const actualOrigin = origin || predefinedOrigin;
 		// Effectuer la requête pour valider l'utilisateur avec l'origine prédéfinie
-		console.log('Actual Origin:', actualOrigin);
-		console.log('JWT:', jwt);
+		console.error('actualOrigin', actualOrigin);
+		console.error('jwt', jwt);
 
 		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
 		// Vérifier si la réponse est réussie (statut 200 OK)
