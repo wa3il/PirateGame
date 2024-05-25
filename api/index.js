@@ -8,12 +8,22 @@ import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 3376;
+
+// Configuration CORS
+const corsOptions = {
+	origin: '*', // Permettre toutes les origines. Vous pouvez restreindre cela pour plus de sécurité.
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+	allowedHeaders: 'Content-Type, Authorization, Origin, X-Requested-With, Accept',
+};
+
+app.use(cors(corsOptions));
 
 // Créer une nouvelle ressource et zrr test
 resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
