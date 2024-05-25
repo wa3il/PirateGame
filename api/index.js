@@ -8,10 +8,12 @@ import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
+
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,6 +57,19 @@ resourceDao.create('toto', { x: 10, y: 5 }, 'pirate', 0, false, [], false, false
 
 zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
+// Configuration CORS
+const corsOptions = {
+	origin: '*', // Permettre toutes les origines. Vous pouvez restreindre cela pour plus de sécurité.
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+	allowedHeaders: 'Content-Type, Authorization, Origin, X-Requested-With, Accept',
+};
+
+app.use(cors(corsOptions));
+
+// Créer une nouvelle ressource et zrr test
+resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
+console.log(resourceDao.getAll());
+zrrDao.create(45.781987907026334, 4.865596890449525);
 
 // Middleware for serving static files
 app.use('/static', express.static(path.join(__dirname, 'public')));

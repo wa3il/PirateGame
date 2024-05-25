@@ -44,6 +44,6 @@ api-Game-deploy:
   script:
     - cd api
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/opt/nodejs/api/
-    - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@$IP_ADDRESS "cd /opt/nodejs/api/ && npm install && pm2 start index.js"
+    - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@$IP_ADDRESS "cd /opt/nodejs/api/ && npm install && pm2 restart index.js"
 
     
