@@ -17,7 +17,7 @@ async function verifUser(token, origin) {
 		console.log('Actual Origin:', actualOrigin);
 		console.log('JWT:', jwt);
 
-		const response = await axios.get(`${SPRING_SERVER_URL}/users_war_exploded/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
+		const response = await axios.get(`${SPRING_SERVER_URL}/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
 		// Vérifier si la réponse est réussie (statut 200 OK)
 		return response.status === 200;
 	} catch (error) {
