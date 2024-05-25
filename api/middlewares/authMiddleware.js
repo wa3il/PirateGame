@@ -16,7 +16,7 @@ async function verifUser(token, origin) {
 		console.log('Actual Origin:', actualOrigin);
 		console.log('JWT:', jwt);
 
-		const response = await axios.get(`${SPRING_SERVER_URL}/users_war_exploded/users/authenticate`, {
+		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate`, {
 			params: {
 				jwt: jwt,
 				origin: actualOrigin
