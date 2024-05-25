@@ -16,7 +16,8 @@ const app = express();
 const port = 3376;
 
 // Créer une nouvelle ressource et zrr test
-resourceDao.create('toto', [4.5, 4], 'VILLAGEOIS', 0, 0, 0, 0);
+resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
+console.log(resourceDao.getAll());
 zrrDao.create(45.781987907026334, 4.865596890449525);
 
 

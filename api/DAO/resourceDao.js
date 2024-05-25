@@ -8,11 +8,11 @@ const resourceDao = {
 	create: (id, position, role, ttl, taken ,potionsList = [], terminated, turned) => {
 		// Créez une nouvelle instance de Resource en fonction du rôle
 		let newResource;
-		if (role === 'villageois') {
+		if (role === 'VILLAGEOIS') {
 			newResource = new Resource(id, position, role, null, null, { potions: potionsList }, terminated, turned);
-		} else if (role === 'pirate') {
+		} else if (role === 'PIRATE') {
 			newResource = new Resource(id, position, role, null, null, { potions: potionsList }, terminated, turned);
-		} else if (role === 'fiole') {
+		} else if (role === 'FIOLE') {
 			newResource = new Resource(id, position, role, ttl, false, null, false, false);
 		}
 		// Ajoutez la nouvelle ressource au tableau de ressources
