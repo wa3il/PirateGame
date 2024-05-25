@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const SPRING_SERVER_URL = 'http://localhost:8443';
-const predefinedOrigin = 'http://localhost:8443'; // Origine prédéfinie pour les tests
+const SPRING_SERVER_URL = 'http://localhost:8080';
+const predefinedOrigin = 'http://localhost:8080'; // Origine prédéfinie pour les tests
 
 async function verifUser(token, origin) {
 	try {
