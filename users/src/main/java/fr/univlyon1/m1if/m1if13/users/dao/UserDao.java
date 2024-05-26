@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 public class UserDao implements Dao<User> {
     private List<User> users = new ArrayList<User>();
 
+
     public UserDao() {
-        users.add(new User("Anny", Species.PIRATE, "milsabor"));
-        users.add(new User("François", Species.VILLAGEOIS, "ChaussureNoire"));
-        users.add(new User("John", Species.ADMIN, "John"));
+       users.add(new User("admin", Species.ADMIN, "admin"));
     }
 
     public Optional<User> findByLogin(String login) {

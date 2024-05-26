@@ -42,15 +42,12 @@ import zrrDao from "../DAO/zrrDao.js";
 const setZrrLimits = async (req, res) => {
 	//set Zrr limits
 	const { point1, point2 } = req.body;
+	console.log(point1, point2);
 	try {
 		const zrr = zrrDao.create(point1, point2);
 		res.status(201).json(zrr);
 	} catch (error) {
-		if (error.message === 'Zrr already exists') {
-			res.status(409).json({ message: 'Zrr already exists' });
-		} else {
-			res.status(500).json({ message: error.message });
-		}
+		res.status(500).json({ message: error.message });
 	}
 };
 
