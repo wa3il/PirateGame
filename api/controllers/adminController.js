@@ -78,15 +78,18 @@ const setZrrLimits = async (req, res) => {
  *         description: Server error
  */
 const setTTL = async (req, res) => {
-	//préciser le TTL initial (valeur par défaut : 1 minute)
-	// post /ressources/ttl
 	const { ttl } = req.body;
+	//console.log(ttl);
+	//let ttl = corps.ttl;
+	console.log(ttl);
+	//let ttl = parseInt(corps);
 	try {
 		if (!ttl) {
-			throw new Error('TTL is not set');
+			throw new Error('TTL is not set or not a number');
 		}
 		resourceDao.setTTL(ttl);
-		res.status(204).json(ttl);
+		res.status(204);
+		console.log('TTL:', ttl);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

@@ -49,9 +49,14 @@ const resourceDao = {
 	setTTL: (n) => {
 		ttl = n;
 		//pour les ressources existantes de type fiole, mettre à jour le TTL
-		resources.filter(resource => resource.role === 'fiole').forEach(resource => resource.ttl = ttl);
+		//resources.filter(resource => resource.role === 'fiole').forEach(resource => resource.ttl = ttl);
 	},
 
+	//get TTL
+	getTTL: () => {
+		return ttl;
+	},
+	
 	//Update position
 	updatePosition: (id, position) => {
 		const resource = resources.find(resource => resource.id === id);

@@ -130,6 +130,16 @@ const updatePosition = async (req, res) => {
 	}
 };
 
+//gettl
+const getTTL = async (req, res) => {
+	try {
+		const ttl = resourceDao.getTTL();
+		res.status(200).json(ttl);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+}
+
 
 /**
  * @swagger
@@ -230,4 +240,4 @@ const getZrrLimits = async (req, res) => {
 	}
 };
 
-export default { getResources, getById, updatePosition, operateResource, getZrrLimits };
+export default { getResources, getById, updatePosition, operateResource, getZrrLimits , getTTL};
