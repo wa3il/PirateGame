@@ -5,26 +5,33 @@ const predefinedOrigin = 'http://localhost:8080/'; // Origine prédéfinie pour 
 
 async function verifUser(token, origin) {
 	try {
-		// Si le token est invalide ou n'est pas au format attendu, renvoyer false
 		if (!token || !token.startsWith('Bearer ')) {
 			return false;
 		}
-		// Extraire le JWT du token
 		const jwt = token.substring(7);
-		// Utiliser l'origine prédéfinie pour les tests
 		const actualOrigin = origin || predefinedOrigin;
-		// Effectuer la requête pour valider l'utilisateur avec l'origine prédéfinie
 		console.log('Actual Origin:', actualOrigin);
 		console.log('JWT:', jwt);
-
-		const response = await axios.get(`${SPRING_SERVER_URL}/users_war_exploded/users/authenticate?jwt=${jwt}&origin=${actualOrigin}`);
-		// Vérifier si la réponse est réussie (statut 200 OK)
+		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate`, {
+			params: {
+				jwt: jwt,
+				origin: actualOrigin
+			}
+		});
 		return response.status === 200;
+  
 	} catch (error) {
-		console.error('Erreur de validation de l\'utilisateur :', error.message);
+		if (error.response) {
+			console.error('Status:', error.response.status);
+			console.error('Headers:', error.response.headers);
+			console.error('Data:', error.response.data);
+		} else {
+			console.error('Error:', error.message);
+		}
 		return false;
 	}
 }
+  
 
 const validateUser = async (req,res,next) => {
 	const token = req.headers.authorization;
