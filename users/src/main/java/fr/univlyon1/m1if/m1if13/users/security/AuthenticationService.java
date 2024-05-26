@@ -56,8 +56,7 @@ public class AuthenticationService {
             user.get().setConnected(true);
             if (jwtService.isTokenValid(user.get().getJwt(), user.get())){
                 return new AuthenticationResponse(user.get().getJwt());
-            }
-            else {
+            } else {
                 user.get().setJwt(null);
                 String jwt = jwtService.generateToken(user.get(), origin);
                 user.get().setJwt(jwt);
