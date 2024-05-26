@@ -12,7 +12,6 @@ public class UserDao implements Dao<User> {
 
 
     public UserDao() {
-       users.add(new User("admin", Species.ADMIN, "admin"));
     }
 
     public Optional<User> findByLogin(String login) {
