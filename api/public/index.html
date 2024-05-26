@@ -10,8 +10,32 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
     	function authenticateAdmin() {
-    		console.log("TODO...");
-    		return true;
+			//Si authentifié, on redirige vers la page admin.html
+			//sinon popup d'erreur
+			//récupération des valeurs du formulaire
+			let login = document.getElementById("login").value;
+			let pass = document.getElementById("pass").value;
+
+			//requete fetch pour envoyer les données au serveur
+			fetch('http://localhost:3000/authenticate', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({login: login, pass: pass})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.token) {
+					//stockage du token dans le local storage
+					localStorage.setItem('token', data.token);
+					//redirection vers la page admin.html
+					//faites dans le form
+					return true;
+				} else {
+					alert('Erreur d\'authentification');
+					return false;
+				}})
     	}
     </script>
     </head>
@@ -26,6 +50,9 @@
 			<div class="content">
 				<p><strong>TODO:</strong> mettre en place le script de connexion en tant que fonction de validation du formulaire. Si un token est récupéré dans la réponse, elle renverra <code>true</code> et le changement de page sera déclenché.</p>
 				<form onsubmit="return authenticateAdmin();" action="admin.html" class="pure-form">
+					<fieldset style="display: flow-root;">
+						<label for="pass" class="first">login </label> <input type="text" id="login">&nbsp;&nbsp;
+					</fieldset>
 					<fieldset style="display: flow-root;">
 						<label for="pass" class="first">Mot de passe </label> <input type="password" id="pass">&nbsp;&nbsp;
 						<input type="submit" value="&#x1F52E;" class="iconic">
