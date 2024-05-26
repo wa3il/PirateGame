@@ -8,6 +8,7 @@ import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
+//import axios from 'axios';
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -50,6 +51,21 @@ const specs = swaggerJsdoc(options);
 fs.writeFileSync('api.json', JSON.stringify(specs, null, 2));
   
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// crééer un admin test avec axios
+// axios.post(`http://localhost:8080/users_war_exploder/users`, {
+// 	header: {
+// 		'Content-Type': 'application/json',	
+// 		'Origin' : 'http://localhost:8080',
+// 		'Accept': 'application/json'
+// 	},
+// 	data: {
+// 		"login": "admin",
+// 		"password": "admin",
+// 		"role": "ADMIN"
+// 	}
+// });
+
 
 // Créer une nouvelle ressource et zrr test
 resourceDao.create(1, { x: 10, y: 20 }, 'villageois', 0, false, [], false, false);

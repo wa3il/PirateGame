@@ -9,33 +9,80 @@
         <link rel="stylesheet" href="css/style.css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-    	function authenticateAdmin() {
-			//Si authentifié, on redirige vers la page admin.html
-			//sinon popup d'erreur
+
+
+		// Fonction de validation du formulaire
+		function validateForm(){
 			//récupération des valeurs du formulaire
 			let login = document.getElementById("login").value;
 			let pass = document.getElementById("pass").value;
+			//vérification des valeurs
+			if (login == "" || pass == "") {
+				alert("Veuillez remplir tous les champs");
+				return false;
+			}
+			if (authenticateAdmin()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 
+
+		// fonction de la requête fetch
+    	function authenticateAdmin() { // Add the event parameter
+			// Prevent form from submitting by default
+			event.preventDefault();
+
+			//Si authentifié, on redirige vers la page admin.html
+			//sinon popup d'erreur
+
+			//récupération des valeurs du formulaire
+			let login = document.getElementById("login").value;
+			let pass = document.getElementById("pass").value;
+			console.log(JSON.stringify({login: login, password: pass}));
 			//requete fetch pour envoyer les données au serveur
-			fetch('http://localhost:3000/authenticate', {
+			fetch('http://localhost:8080/users_war_exploded/users/login', {
 				method: 'POST',
+				mode: 'cors',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'Access-Control-Allow-Origin': '*'
 				},
-				body: JSON.stringify({login: login, pass: pass})
+				body: JSON.stringify({login: login, password: pass})
+				
 			})
-			.then(response => response.json())
+			.then((response) => {
+            if(response.ok) {
+                return response.json();
+				
+
+            }
+			else if (response.status === 401 ) {
+				throw new Error("Unauthorized");
+			}
+			else {
+                throw new Error("Response is error (" + response.status + ") or does not contain JSON (" + response.headers.get("Content-Type") + ").");
+            }
+      		})
 			.then(data => {
 				if (data.token) {
 					//stockage du token dans le local storage
 					localStorage.setItem('token', data.token);
+					console.log(data.token);
 					//redirection vers la page admin.html
-					//faites dans le form
+					window.location.href = 'admin.html';
 					return true;
 				} else {
 					alert('Erreur d\'authentification');
 					return false;
 				}})
+			.catch((error) => {	
+				console.error('Error:', error);
+				alert('Erreur d\'authentification');
+				return false;
+			});
     	}
     </script>
     </head>
@@ -49,7 +96,7 @@
 			<h2>Page de connexion. Réservée aux Sages et à Merlini.</h2>
 			<div class="content">
 				<p><strong>TODO:</strong> mettre en place le script de connexion en tant que fonction de validation du formulaire. Si un token est récupéré dans la réponse, elle renverra <code>true</code> et le changement de page sera déclenché.</p>
-				<form onsubmit="return authenticateAdmin();" action="admin.html" class="pure-form">
+				<form onsubmit="return validateForm();" action="admin.html" class="pure-form">
 					<fieldset style="display: flow-root;">
 						<label for="pass" class="first">login </label> <input type="text" id="login">&nbsp;&nbsp;
 					</fieldset>
