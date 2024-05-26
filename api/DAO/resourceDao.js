@@ -7,6 +7,7 @@ const resourceDao = {
 	// Créer une nouvelle ressource
 	create: (id, position, role, ttl, taken ,potionsList = [], terminated, turned) => {
 		// Créez une nouvelle instance de Resource en fonction du rôle
+		id = String(id);
 		let newResource;
 		if (role === 'VILLAGEOIS') {
 			newResource = new Resource(id, position, role, null, null, { potions: potionsList }, terminated, turned);
@@ -22,12 +23,16 @@ const resourceDao = {
 
 	// Read all resources
 	getAll: () => {
+		console.log(resources);
 		return resources;
 	},
 
 	// Read a specific resource by ID
+
 	getById: (id) => {
-		return resources.find(resource => resource.id === id);
+		let resource = resources.find(resource => resource.id === id);
+		console.log(resource);
+		return resource ? resource : null;
 	},
 
 	// Update a resource
@@ -112,6 +117,7 @@ const resourceDao = {
 		if (resource && resource.role === 'villageois') {
 			resource.role = 'pirate';
 			resource.turned = true;
+			return resource;
 		}
 		else {
 			throw new Error('Resource not a villager');

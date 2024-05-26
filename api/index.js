@@ -8,6 +8,11 @@ import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
+
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+
 import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +20,42 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 3376;
+
+// Swagger documentation
+const options = {
+	definition: {
+		openapi: '3.0.0',
+		info: {
+			title: "The Pirate's Curse",
+			version: '1.0.0',
+		},
+		tags: [
+			{
+				name: "Ressource Géolocalisée",
+				description: "Operations related to geolocated resources"
+			},
+			{
+				name: "ZRR",
+				description: "Operations related to ZRR"
+			}
+		],
+	},
+	
+	apis: ['./controllers/*.js'], // path to the API files
+};
+  
+const specs = swaggerJsdoc(options);
+
+// Save Swagger documentation to a .json file
+fs.writeFileSync('api.json', JSON.stringify(specs, null, 2));
+  
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// Créer une nouvelle ressource et zrr test
+resourceDao.create(1, { x: 10, y: 20 }, 'villageois', 0, false, [], false, false);
+resourceDao.create('toto', { x: 10, y: 5 }, 'pirate', 0, false, [], false, false);
+
+zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
 // Configuration CORS
 const corsOptions = {
@@ -29,7 +70,6 @@ app.use(cors(corsOptions));
 resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
 console.log(resourceDao.getAll());
 zrrDao.create(45.781987907026334, 4.865596890449525);
-
 
 // Middleware for serving static files
 app.use('/static', express.static(path.join(__dirname, 'public')));
