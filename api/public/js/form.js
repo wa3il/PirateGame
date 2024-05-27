@@ -1,4 +1,5 @@
 // Initialisation
+/* global L */
 function initListeners(mymap) {
 	console.log("TODO: add more event listeners...");
 	console.log(mymap);
@@ -13,6 +14,8 @@ function initListeners(mymap) {
 
 	document.getElementById("setTtlButton").addEventListener("click", () => {
 		setTtl();
+		startGame(mymap);
+		getResources();
 	});
 }
 
@@ -120,5 +123,52 @@ function setTtl() {
 		});
 }
 
-export { updateLatValue, updateLonValue, updateZoomValue };
+
+function startGame(mymap){
+	//setInterval(getResources, 10000);
+	// mock data for testing
+	let data = [
+		{
+			id: 1,
+			type: 'villageois',
+			position: { x: 10, y: 20 },
+			ttl: 0
+		},
+		{
+			id: 2,
+			type: 'pirate',
+			position: { x: 10, y: 5 },
+			ttl: 0
+		}
+	];
+	//afficher les ressources sur la map
+	for (let i = 0; i < data.length; i++) {
+		let resource = data[i];
+		let marker = L.marker([resource.position.x, resource.position.y]).addTo(mymap);
+		marker.bindPopup(`ID: ${resource.id}<br>Type: ${resource.type}<br>Time to live: ${resource.ttl}`);
+	}
+}
+
+// fetch ressources 
+function getResources(){
+	console.log('Token:', localStorage.getItem('token'));
+	fetch('/api/resources', {
+		method: 'GET',
+		headers: {
+			'Authorization' : 'Bearer ' + localStorage.getItem('token'),
+			'Content-Type': 'application/json',
+		},
+	}).then(response => {
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		return response.json();
+	}).then(data => {
+		console.log('Success:', data);
+	}).catch((error) => {
+		console.error('Error:', error);
+	});
+}
+
+export { updateLatValue, updateLonValue, updateZoomValue, startGame };
 export default initListeners;

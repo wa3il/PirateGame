@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const SPRING_SERVER_URL = 'http://localhost:8080';
-const predefinedOrigin = 'http://localhost:8080/'; // Origine prédéfinie pour les tests
+//const predefinedOrigin = 'http://localhost:8080/'; // Origine prédéfinie pour les tests
 
 async function verifUser(token, origin) {
 	try {
@@ -9,7 +9,7 @@ async function verifUser(token, origin) {
 			return false;
 		}
 		const jwt = token.substring(7);
-		const actualOrigin = origin || predefinedOrigin;
+		const actualOrigin = origin;
 		console.log('Actual Origin:', actualOrigin);
 		console.log('JWT:', jwt);
 		const response = await axios.get(`${SPRING_SERVER_URL}/users_war_exploded/users/authenticate`, {
