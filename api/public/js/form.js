@@ -1,7 +1,6 @@
 // Initialisation
 function initListeners(mymap) {
 	console.log("TODO: add more event listeners...");
-	console.log(mymap);
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
 		setZrr(mymap.getBounds());
@@ -44,30 +43,19 @@ function setZrr(bounds) {
 	document.getElementById("lon1").value = lon1;
 	document.getElementById("lat2").value = lat2;
 	document.getElementById("lon2").value = lon2;
-
-	//set les ZRR de la map
-	console.log(bounds);
 }
 
 // Requêtes asynchrones
 function sendZrr() {
-	//get les valeurs des inputs
-	//1er point 
-	let x1 = document.getElementById("lat1").value;
-	let y1 = document.getElementById("lon1").value;
-	//2eme point
-	let x2 = document.getElementById("lat2").value;
-	let y2 = document.getElementById("lon2").value;
-
 	//envoyer les valeurs des inputs
 	let corps = {
 		point1: {
-			x: x1,
-			y: y1
+			x: parseFloat(document.getElementById("lat1").value),
+			y: parseFloat(document.getElementById("lon1").value)
 		},
 		point2: {
-			x: x2,
-			y: y2
+			x: parseFloat(document.getElementById("lat2").value),
+			y: parseFloat(document.getElementById("lon2").value)
 		}
 	}
 	console.log(corps);
@@ -77,7 +65,6 @@ function sendZrr() {
 		body : JSON.stringify(corps),
 		headers: {
 			// autorisation
-			'Content-Type': 'application/json',
 			'Authorization' : 'Bearer ' + localStorage.getItem('token')
 		},
 		

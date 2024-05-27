@@ -67,11 +67,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // });
 
 
-// Créer une nouvelle ressource et zrr test
-resourceDao.create(1, { x: 10, y: 20 }, 'villageois', 0, false, [], false, false);
-resourceDao.create('toto', { x: 10, y: 5 }, 'pirate', 0, false, [], false, false);
-
-zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
 // Configuration CORS
 const corsOptions = {
@@ -84,8 +79,7 @@ app.use(cors(corsOptions));
 
 // Créer une nouvelle ressource et zrr test
 resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
-console.log(resourceDao.getAll());
-zrrDao.create(45.781987907026334, 4.865596890449525);
+zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
 // Middleware for serving static files
 app.use('/static', express.static(path.join(__dirname, 'public')));
