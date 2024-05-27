@@ -2,7 +2,7 @@
 /* global L */
 function initListeners(mymap) {
 	document.addEventListener("DOMContentLoaded", function() {
-		startGame();
+		startGame(mymap);
 	});
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
@@ -68,7 +68,8 @@ function sendZrr() {
 		body : JSON.stringify(corps),
 		headers: {
 			// autorisation
-			'Authorization' : 'Bearer ' + localStorage.getItem('token')
+			'Authorization' : 'Bearer ' + localStorage.getItem('token'),
+			'Content-Type': 'application/json'
 		},
 		
 	})
@@ -110,13 +111,13 @@ function setTtl() {
 		});
 }
 
-function startGame(){
+function startGame(mymap){
 	//setInterval(getResources, 10000);
-	getResources();
+	getResources(mymap);
 }
 
 // fetch ressources 
-function getResources(){
+function getResources(mymap){
 	const headers = new Headers();
 	headers.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
 	const requestConfig = {
@@ -135,6 +136,13 @@ function getResources(){
 		})
 		.then(data => {
 			console.log('Success:', data);
+			//afficher les ressources sur la map
+			data.forEach(resource => {
+				console.log(resource);
+				console.log(resource.position[0] + ' ' + resource.position[1]);
+				let marker = L.marker([resource.position[0], resource.position[1]]).addTo(mymap);
+				marker.bindPopup(resource.name);
+			});
 		})
 		.catch((error) => {
 			console.error('Error:', error);
