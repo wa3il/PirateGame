@@ -79,7 +79,32 @@ function sendZrr() {
 }
 
 function setTtl() {
-	console.log("TODO: send fetch request...");
+	//get les valeurs des inputs
+	let ttl = document.getElementById("ttl").value;
+	console.log(ttl);
+	//envoyer les valeurs des inputs
+	let corps = {
+		ttl: ttl
+	}
+	console.log(corps);
+	console.log('Token:', localStorage.getItem('token'));
+	fetch('http://localhost:3376/admin/resources/ttl', {
+		method: 'POST',
+		body : JSON.stringify(corps),
+		headers: {
+			// autorisation
+			'Authorization' : 'Bearer ' + localStorage.getItem('token'),
+			'Content-Type': 'application/json'
+		},
+		
+	})
+		.then(response => response.json())
+		.then(data => {
+			console.log('Success:', data);
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
 }
 
 export { updateLatValue, updateLonValue, updateZoomValue };
