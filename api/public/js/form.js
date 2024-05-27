@@ -1,6 +1,8 @@
 // Initialisation
 function initListeners(mymap) {
-	console.log("TODO: add more event listeners...");
+	document.addEventListener("DOMContentLoaded", function() {
+		startGame();
+	});
 
 	document.getElementById("setZrrButton").addEventListener("click", () => {
 		setZrr(mymap.getBounds());
@@ -99,6 +101,37 @@ function setTtl() {
 		
 	})
 		.then(response => response.json())
+		.then(data => {
+			console.log('Success:', data);
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
+}
+
+function startGame(){
+	//setInterval(getResources, 10000);
+	getResources();
+}
+
+// fetch ressources 
+function getResources(){
+	const headers = new Headers();
+	headers.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
+	const requestConfig = {
+		method: 'GET',
+		headers: headers,
+		mode: 'cors'
+	}
+
+	fetch('http://localhost:3376/api/resources', requestConfig)
+		.then(response => {
+			// Vérifier si la requête a réussi (status 200-299)
+			if (!response.ok) {
+				throw new Error("Bad response code (" + response.status + ").");
+			}
+			return response.json();
+		})
 		.then(data => {
 			console.log('Success:', data);
 		})
