@@ -47,8 +47,7 @@
 				mode: 'cors',
 				headers: {
 					'Content-Type': 'application/json',
-					'Accept': 'application/json',
-					'Access-Control-Allow-Origin': '*'
+					'Accept': 'application/json'
 				},
 				body: JSON.stringify({login: login, password: pass})
 				
@@ -56,8 +55,6 @@
 			.then((response) => {
             if(response.ok) {
                 return response.json();
-				
-
             }
 			else if (response.status === 401 ) {
 				throw new Error("Unauthorized");
