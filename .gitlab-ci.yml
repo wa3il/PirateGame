@@ -63,6 +63,6 @@ client-deploy:
 
     # Installation des dépendances npm et construction des versions dev et prod
     - npm install
-    - npm run build:dev && cd dist && scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/opt/nodejs/api/public/
+    - npm run build:dev && cd dist && scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/opt/nodejs/api/public/ && cd ..
     - npm run build:prod && cd dist && scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/usr/share/nginx/secret/
 
