@@ -1,5 +1,4 @@
 import axios from 'axios';
-import url from 'url';
 
 const SPRING_SERVER_URL = 'http://localhost:8080';
 
