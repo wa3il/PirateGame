@@ -14,5 +14,6 @@
     },
     "globals": {
         "__dirname": "readonly"
-    }
+    },
+    "ignorePatterns": ["**/public/*.bundle.js"]
 }

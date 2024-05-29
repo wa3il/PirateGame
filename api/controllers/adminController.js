@@ -42,15 +42,12 @@ import zrrDao from "../DAO/zrrDao.js";
 const setZrrLimits = async (req, res) => {
 	//set Zrr limits
 	const { point1, point2 } = req.body;
+	console.log(point1, point2);
 	try {
 		const zrr = zrrDao.create(point1, point2);
 		res.status(201).json(zrr);
 	} catch (error) {
-		if (error.message === 'Zrr already exists') {
-			res.status(409).json({ message: 'Zrr already exists' });
-		} else {
-			res.status(500).json({ message: error.message });
-		}
+		res.status(500).json({ message: error.message });
 	}
 };
 
@@ -81,15 +78,18 @@ const setZrrLimits = async (req, res) => {
  *         description: Server error
  */
 const setTTL = async (req, res) => {
-	//préciser le TTL initial (valeur par défaut : 1 minute)
-	// post /ressources/ttl
 	const { ttl } = req.body;
+	//console.log(ttl);
+	//let ttl = corps.ttl;
+	console.log(ttl);
+	//let ttl = parseInt(corps);
 	try {
 		if (!ttl) {
-			throw new Error('TTL is not set');
+			throw new Error('TTL is not set or not a number');
 		}
 		resourceDao.setTTL(ttl);
-		res.status(204).json(ttl);
+		res.status(204);
+		console.log('TTL:', ttl);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

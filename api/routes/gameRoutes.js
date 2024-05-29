@@ -14,6 +14,9 @@ router.get('/resources', gameController.getResources);
 //get resource by id
 router.get('/resources/:id', gameController.getById);
 
+//get ttl
+router.get('/ttl', gameController.getTTL);
+
 //Post an action on resource
 router.post('/resources/:id', gameController.operateResource);
 

@@ -36,7 +36,7 @@ public class UserResourceController {
      *
      * @return a list of users
      */
-    @GetMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+    @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Set<String>> getAllUser() {
         return ResponseEntity.ok(userDao.getAll());
@@ -49,7 +49,6 @@ public class UserResourceController {
      * @return the user
      */
     @GetMapping(value = "/{login}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> getUser(@PathVariable("login") final String login) {
         Optional<User> user = userDao.get(login);

@@ -54,7 +54,14 @@ public class AuthenticationService {
         }
         else if (user.get().getJwt() != null) {
             user.get().setConnected(true);
-            return new AuthenticationResponse(user.get().getJwt());
+            if (jwtService.isTokenValid(user.get().getJwt(), user.get())){
+                return new AuthenticationResponse(user.get().getJwt());
+            } else {
+                user.get().setJwt(null);
+                String jwt = jwtService.generateToken(user.get(), origin);
+                user.get().setJwt(jwt);
+                return new AuthenticationResponse(jwt);
+            }
         }
         else {
             user.get().setConnected(true);

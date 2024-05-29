@@ -1,4 +1,7 @@
 /* global L */
+
+import { updateZoomValue,updateLatValue,updateLonValue} from "./form.js";
+
 // initialisation de la map
 const lat = 45.782, lng = 4.8656, zoom = 19;
 
@@ -25,19 +28,27 @@ function initMap() {
 	// Ajout d'un marker
 	L.marker([45.78207, 4.86559]).addTo(mymap).bindPopup('Entrée du bâtiment<br>Nautibus.').openPopup();
 
-	// Clic sur la carte
+	// Clic sur la carte ou zoom ou dézoom ou changement de position
+	
 	mymap.on('click', e => {
+		// update des valeurs des inputs
+		updateLatValue(e.latlng.lat);
+		updateLonValue(e.latlng.lng);
+		updateZoomValue(mymap.getZoom());
 		updateMap([e.latlng.lat, e.latlng.lng], mymap.getZoom());
+		
 	});
+
 
 	return mymap;
 }
 
 // Mise à jour de la map
 function updateMap(latlng, zoom) {
+	
 	// Affichage à la nouvelle position
 	mymap.setView(latlng, zoom);
-
+	
 	// La fonction de validation du formulaire renvoie false pour bloquer le rechargement de la page.
 	return false;
 }

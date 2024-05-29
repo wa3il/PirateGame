@@ -33,10 +33,18 @@ public class UsersOperationsController {
     @PostMapping(value = "/login",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType, @RequestHeader String origin) throws JsonProcessingException {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType, @RequestHeader("Origin") String origin) throws JsonProcessingException {
         Optional<UserRequestDto> userRequest = getUserDtoRequest(requestBody, contentType);
         if (userRequest.isPresent()) {
-            return ResponseEntity.ok(authenticationService.authenticate(userRequest.get(),origin));
+            try
+            {
+                return ResponseEntity.ok(authenticationService.authenticate(userRequest.get(),origin));
+            }
+            catch (Exception e)
+            {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

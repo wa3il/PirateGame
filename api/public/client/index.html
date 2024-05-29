@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+		<meta charset="UTF-8">
+        <title>The Pirate's Curse - Confidentiel</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+        <link rel="stylesheet" href="css/style.css"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+		const API_SPRING_PATH = 'https://192.168.75.124:8443';
+
+		// Fonction de validation du formulaire
+		function validateForm(){
+			//récupération des valeurs du formulaire
+			let login = document.getElementById("login").value;
+			let pass = document.getElementById("pass").value;
+			//vérification des valeurs
+			if (login == "" || pass == "") {
+				alert("Veuillez remplir tous les champs");
+				return false;
+			}
+			if (authenticateAdmin()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+
+		// fonction de la requête fetch
+    	function authenticateAdmin() { // Add the event parameter
+			// Prevent form from submitting by default
+			event.preventDefault();
+
+			//Si authentifié, on redirige vers la page admin.html
+			//sinon popup d'erreur
+
+			//récupération des valeurs du formulaire
+			let login = document.getElementById("login").value;
+			let pass = document.getElementById("pass").value;
+			console.log(JSON.stringify({login: login, password: pass}));
+			//requete fetch pour envoyer les données au serveur
+			fetch(`${API_SPRING_PATH}/users/users/login`, {
+				method: 'POST',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'Access-Control-Allow-Origin': '*'
+
+				},
+				body: JSON.stringify({login: login, password: pass})
+				
+			})
+			.then((response) => {
+            if(response.ok) {
+                return response.json();
+            }
+			else if (response.status === 401 ) {
+				throw new Error("Unauthorized");
+			}
+			else {
+                throw new Error("Response is error (" + response.status + ") or does not contain JSON (" + response.headers.get("Content-Type") + ").");
+            }
+      		})
+			.then(data => {
+				if (data.token) {
+					//stockage du token dans le local storage
+					localStorage.setItem('token', data.token);
+					console.log(data.token);
+					//redirection vers la page admin.html
+					window.location.href = 'admin.html';
+					return true;
+				} else {
+					alert('Erreur d\'authentification');
+					return false;
+				}})
+			.catch((error) => {	
+				console.error('Error:', error);
+				alert('Erreur d\'authentification');
+				return false;
+			});
+    	}
+    </script>
+    </head>
+    <body class="b">
+		<header>
+			<h1>The Pirate's Curse</h1>
+			<h1 class="elanor">Confidentiel</span></h1>
+		</header>
+
+		<section>
+			<h2>Page de connexion. Réservée aux Sages et à Merlini.</h2>
+			<div class="content">
+				<p><strong>TODO:</strong> mettre en place le script de connexion en tant que fonction de validation du formulaire. Si un token est récupéré dans la réponse, elle renverra <code>true</code> et le changement de page sera déclenché.</p>
+				<form onsubmit="return validateForm();" action="admin.html" class="pure-form">
+					<fieldset style="display: flow-root;">
+						<label for="pass" class="first">login </label> <input type="text" id="login">&nbsp;&nbsp;
+					</fieldset>
+					<fieldset style="display: flow-root;">
+						<label for="pass" class="first">Mot de passe </label> <input type="password" id="pass">&nbsp;&nbsp;
+						<input type="submit" value="&#x1F52E;" class="iconic">
+					</fieldset>
+				</form>
+			</div>
+		</section>
+	</body>
+</html>

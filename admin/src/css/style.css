@@ -1,21 +1,21 @@
 @font-face {
 	font-family: _h1_;
-	src: url(HVD_Bodedo-webfont.woff);
+	src: url(./fonts/Webfonts/HVD_Bodedo-webfont.woff);
 }
 
 @font-face {
 	font-family: _h2_;
-	src: url(AquilineTwo-webfont.woff);
+	src: url(./fonts/Webfonts/AquilineTwo-webfont.woff);
 }
 
 @font-face {
 	font-family: _strong_;
-	src: url(AftaSerifThin-Regular.otf);
+	src: url(./fonts/AftaSerifThin-Regular.otf);
 }
 
 @font-face {
 	font-family: _normal_;
-	src: url(AftaSerifThin-Regular.otf);
+	src: url(./fonts/AftaSerifThin-Regular.otf);
 }
 
 
@@ -27,7 +27,7 @@ body {
 }
 
 .b {
-	background-image: url('pirates-bg.jpg');
+	background-image: url('../img/pirates-bg.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-blend-mode: screen;

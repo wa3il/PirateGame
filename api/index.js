@@ -8,6 +8,7 @@ import gameRoutes from './routes/gameRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resourceDao from './DAO/resourceDao.js';
 import zrrDao from './DAO/zrrDao.js';
+//import axios from 'axios';
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -51,11 +52,21 @@ fs.writeFileSync('api.json', JSON.stringify(specs, null, 2));
   
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Créer une nouvelle ressource et zrr test
-resourceDao.create(1, { x: 10, y: 20 }, 'villageois', 0, false, [], false, false);
-resourceDao.create('toto', { x: 10, y: 5 }, 'pirate', 0, false, [], false, false);
+// crééer un admin test avec axios
+// axios.post(`http://localhost:8080/users_war_exploder/users`, {
+// 	header: {
+// 		'Content-Type': 'application/json',	
+// 		'Origin' : 'http://localhost:8080',
+// 		'Accept': 'application/json'
+// 	},
+// 	data: {
+// 		"login": "admin",
+// 		"password": "admin",
+// 		"role": "ADMIN"
+// 	}
+// });
 
-zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
+
 
 // Configuration CORS
 const corsOptions = {
@@ -68,8 +79,7 @@ app.use(cors(corsOptions));
 
 // Créer une nouvelle ressource et zrr test
 resourceDao.create('toto', [4.5, 4],'VILLAGEOIS',0, false, [], false, false);
-console.log(resourceDao.getAll());
-zrrDao.create(45.781987907026334, 4.865596890449525);
+zrrDao.create({ x: 0, y: 0}, { x: 50, y: 50 });
 
 // Middleware for serving static files
 app.use('/static', express.static(path.join(__dirname, 'public')));

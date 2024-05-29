@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const SPRING_SERVER_URL = 'http://localhost:8080';
-const predefinedOrigin = 'http://localhost:8080/'; // Origine prédéfinie pour les tests
 
 async function verifUser(token, origin) {
 	try {
@@ -9,13 +8,11 @@ async function verifUser(token, origin) {
 			return false;
 		}
 		const jwt = token.substring(7);
-		const actualOrigin = origin || predefinedOrigin;
-		console.log('Actual Origin:', actualOrigin);
 		console.log('JWT:', jwt);
 		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate`, {
 			params: {
 				jwt: jwt,
-				origin: actualOrigin
+				origin: origin
 			}
 		});
 		return response.status === 200;
@@ -35,10 +32,12 @@ async function verifUser(token, origin) {
 
 const validateUser = async (req,res,next) => {
 	const token = req.headers.authorization;
-	const origin = req.headers.origin;
+	const origin = req.headers.origin || req.headers.referer;
+	const originparse = origin ? new URL(origin).origin : '';
+	console.log('Origin', originparse);
 
 	if(token){
-		const isValidUser = await verifUser(token, origin);
+		const isValidUser = await verifUser(token, originparse);
 		if (!isValidUser) {
 			res.status(401).json({ message: 'Unauthorized' });
 			return;
@@ -46,7 +45,6 @@ const validateUser = async (req,res,next) => {
 		next();
 	}else{
 		res.status(401).json({ message: 'Unauthorized' });
-		return;
 	}
 
 };
