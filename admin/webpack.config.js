@@ -5,13 +5,13 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-let apiPath = '';
+let apiPath = '/game';
 const stylesHandler = 'style-loader';
 const isProduction = process.env.NODE_ENV === 'production';
 console.log('isProduction:', isProduction);
 
 if (isProduction) {
-    apiPath = 'http://localhost:3376';
+    apiPath = ' https://192.168.75.124/game';
 }
 
 const config = {
