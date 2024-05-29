@@ -36,7 +36,7 @@ api-Game-deploy:
   stage: deploy
   image: node:20-alpine # docker image with Node.js
   only:
-    - main
+    - TP4
   before_script:
     - apk add --no-cache openssh-client
     - chmod 400 $CI_SSH_KEY
@@ -50,7 +50,7 @@ client-deploy:
   stage: deploy
   image: node:20-alpine # docker image with Node.js
   only:
-    - main
+    - TP4
   before_script:
     - apk add --no-cache openssh-client
     - chmod 400 $CI_SSH_KEY
