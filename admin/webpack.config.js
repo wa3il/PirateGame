@@ -8,6 +8,11 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 let apiPath = '';
 const stylesHandler = 'style-loader';
 const isProduction = process.env.NODE_ENV === 'production';
+console.log('isProduction:', isProduction);
+
+if (isProduction) {
+    apiPath = 'http://localhost:3376';
+}
 
 const config = {
     entry: {
@@ -60,7 +65,6 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        apiPath = 'http://localhost:3376';
     } else {
         config.mode = 'development';
     }
