@@ -19,7 +19,7 @@ api-USERS-deploy:
   stage: deploy
   image: maven:3.8.8-eclipse-temurin-21-alpine # docker image with Maven
   only:
-    - TP4
+    - main
   before_script:
     - ./ci/setup-mvn-proxy.sh
     # Useful only for debugging
