@@ -42,7 +42,7 @@
 			let pass = document.getElementById("pass").value;
 			console.log(JSON.stringify({login: login, password: pass}));
 			//requete fetch pour envoyer les données au serveur
-			fetch('http://localhost:8080/users/users/login', {
+			fetch('https://192.168.75.124:8443/users/users/login', {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
