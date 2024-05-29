@@ -34,7 +34,7 @@ async function verifUser(token, origin) {
 const validateUser = async (req,res,next) => {
 	const token = req.headers.authorization;
 	const origin = req.headers.origin || req.headers.referer;
-	const originparse = origin ? url.parse(origin).protocol + '//' + url.parse(origin).host : '';
+	const originparse = origin ? new URL(origin).origin : '';
 	console.log('Origin', originparse);
 
 	if(token){
