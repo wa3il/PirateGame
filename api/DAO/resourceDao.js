@@ -165,6 +165,10 @@ const resourceDao = {
 			return deletedResource;
 		}
 		return null;
+	},
+
+	deleteAll: () => {
+		resources = [];
 	}
 };
 

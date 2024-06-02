@@ -124,6 +124,7 @@ const triggerPotion = async (req, res) => {
 		const resource = resourceDao.create(null, position, 'fiole', zrrDao.ttl, null, false, false);
 		res.status(201).json(resource);
 	} catch (error) {
+		console.error('Error in triggerPotion:', error);
 		res.status(500).json({ message: error.message });
 	}
 };
