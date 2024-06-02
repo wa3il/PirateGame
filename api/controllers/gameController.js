@@ -194,7 +194,7 @@ const operateResource = async (req, res) => {
 				}
 			}
 			else if (action === 'terminate pirate') {
-				resourceDao.terminatePirate(id);
+				resourceDao.terminate(id);
 				res.status(204).json({ message: 'Pirate terminated' });
 			}
 			else if (action === 'turn villager into pirate') {
@@ -208,6 +208,7 @@ const operateResource = async (req, res) => {
 			}
 		}
 	} catch (error) {
+		console.error('Error in operateResource:', error);
 		res.status(500).json({ message: error.message });
 	}
 };
