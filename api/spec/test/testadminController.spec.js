@@ -60,4 +60,57 @@ describe("adminController", () => {
 			expect(res.status().json).toHaveBeenCalledWith({ message: 'TTL is not set or not a number' });
 		});
 	});
+
+	describe("triggerPotion", () => {
+		it("should create a potion resource and return 201", async () => {
+			zrrDao.zrr = true;
+			zrrDao.limiteNE = { x: 10, y: 10 };
+			zrrDao.limiteNO = { x: 0, y: 0 };
+			zrrDao.limiteSE = { x: 10, y: 10 };
+			resourceDao.ttl = 10;
+			const resource = { id: 1, role: 'fiole', position: [5, 5] };
+			spyOn(resourceDao, 'create').and.returnValue(resource);
+
+			await adminController.triggerPotion(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(201);
+			expect(res.status().json).toHaveBeenCalledWith(resource);
+		});
+
+		it("should return 500 if no ZRR exists", async () => {
+			zrrDao.zrr = false;
+
+			await adminController.triggerPotion(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(500);
+			expect(res.status().json).toHaveBeenCalledWith({ message: 'No Zrr exists' });
+		});
+
+		it("should return 500 if TTL is not set", async () => {
+			zrrDao.zrr = true;
+			zrrDao.limiteNE = { x: 10, y: 10 };
+			zrrDao.limiteNO = { x: 0, y: 0 };
+			zrrDao.limiteSE = { x: 10, y: 10 };
+			resourceDao.ttl = 0;
+
+			await adminController.triggerPotion(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(500);
+			expect(res.status().json).toHaveBeenCalledWith({ message: 'TTL is not set yet' });
+		});
+
+		it("should handle other errors", async () => {
+			zrrDao.zrr = true;
+			zrrDao.limiteNE = { x: 10, y: 10 };
+			zrrDao.limiteNO = { x: 0, y: 0 };
+			zrrDao.limiteSE = { x: 10, y: 10 };
+			resourceDao.ttl = 10;
+			spyOn(resourceDao, 'create').and.throwError('Error');
+
+			await adminController.triggerPotion(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(500);
+			expect(res.status().json).toHaveBeenCalledWith({ message: 'Error' });
+		});
+	});
 });
