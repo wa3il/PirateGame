@@ -1,6 +1,7 @@
-import './css/style.css';
 import map from './map.js';
-import { initListeners } from './form.js';
+import form from './form.js';
+import './css/style.css';
 
 const mymap = map();
-initListeners(mymap);
+const myform = form(mymap);
+console.log(myform);

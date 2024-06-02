@@ -1,25 +1,53 @@
-import axios from '../config/axiosConfig.js';
+import axios from 'axios';
 
-// Middleware pour valider l'identité de l'utilisateur avec Spring
-const validateIdentity = async (req, res, next) => {
-	const token = req.headers.authorization;
+const SPRING_SERVER_URL = 'http://localhost:8080';
 
-	if (!token) {
-		return res.status(401).json({ message: 'Missing authorization token' });
-	}
-
+async function verifUser(token, origin) {
 	try {
-		const response = await axios.post('/validateToken', { token });
-
-		if (response.data.valid) {
-			next();
-		} else {
-			return res.status(401).json({ message: 'Invalid authorization token' });
+		if (!token || !token.startsWith('Bearer ')) {
+			return false;
 		}
+		const jwt = token.substring(7);
+		console.log('JWT:', jwt);
+		const response = await axios.get(`${SPRING_SERVER_URL}/users/users/authenticate`, {
+			params: {
+				jwt: jwt,
+				origin: origin
+			}
+		});
+		return response.status === 200;
+  
 	} catch (error) {
-		console.error('Error validating token:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		if (error.response) {
+			console.error('Status:', error.response.status);
+			console.error('Headers:', error.response.headers);
+			console.error('Data:', error.response.data);
+		} else {
+			console.error('Error:', error.message);
+		}
+		return false;
 	}
+}
+  
+
+const validateUser = async (req,res,next) => {
+	const token = req.headers.authorization;
+	const origin = req.headers.origin || req.headers.referer;
+	const originparse = origin ? new URL(origin).origin : '';
+	console.log('Origin', originparse);
+
+	if(token){
+		const isValidUser = await verifUser(token, originparse);
+		if (!isValidUser) {
+			res.status(401).json({ message: 'Unauthorized' });
+			return;
+		}
+		next();
+	}else{
+		res.status(401).json({ message: 'Unauthorized' });
+	}
+
 };
 
-export default validateIdentity;
+
+export default validateUser;

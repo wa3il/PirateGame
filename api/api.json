@@ -1,0 +1,285 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "The Pirate's Curse",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Ressource Géolocalisée",
+      "description": "Operations related to geolocated resources"
+    },
+    {
+      "name": "ZRR",
+      "description": "Operations related to ZRR"
+    }
+  ],
+  "paths": {
+    "/zrr": {
+      "post": {
+        "tags": [
+          "ZRR"
+        ],
+        "summary": "Définition des limites de la zone de jeu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "point1": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "point2": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Zrr created"
+          },
+          "409": {
+            "description": "Zrr already exists"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ZRR"
+        ],
+        "summary": "Récupération des limites de la ZRR",
+        "responses": {
+          "200": {
+            "description": "ZRR limits"
+          },
+          "404": {
+            "description": "No Zrr exists"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/resources/ttl": {
+      "post": {
+        "tags": [
+          "Ressource Géolocalisée"
+        ],
+        "summary": "Set the Time To Live (TTL) for a resource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ttl": {
+                    "type": "number",
+                    "description": "The TTL value in seconds"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "TTL successfully set"
+          },
+          "400": {
+            "description": "TTL is not set"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/triggerPotion": {
+      "post": {
+        "summary": "Déclenchement de l'apparition d'une fiole",
+        "tags": [
+          "Potion"
+        ],
+        "operationId": "triggerPotion",
+        "responses": {
+          "201": {
+            "description": "Fiole created"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/resources": {
+      "get": {
+        "tags": [
+          "Ressource Géolocalisée"
+        ],
+        "summary": "Récupération de la liste des ressources géolocalisées",
+        "responses": {
+          "200": {
+            "description": "A list of all resources in the game"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/resources/{id}": {
+      "get": {
+        "tags": [
+          "Ressource Géolocalisée"
+        ],
+        "summary": "Récupération d'une ressource par son identifiant",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource found"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Ressource Géolocalisée"
+        ],
+        "summary": "Opération sur une ressource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "example": "grab potion flask"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Potion grabbed"
+          },
+          "400": {
+            "description": "Action not found"
+          },
+          "404": {
+            "description": "No potion flask nearby"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/resources/{id}/position": {
+      "put": {
+        "tags": [
+          "Ressource Géolocalisée"
+        ],
+        "summary": "Mise à jour de la position du joueur",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "example": [
+                  10,
+                  20
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Position updated"
+          },
+          "400": {
+            "description": "Position is required"
+          },
+          "401": {
+            "description": "Position must be an array of 2 numbers"
+          },
+          "402": {
+            "description": "Position is out of ZRR"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

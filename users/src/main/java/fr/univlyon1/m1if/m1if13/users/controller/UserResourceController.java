@@ -36,8 +36,7 @@ public class UserResourceController {
      *
      * @return a list of users
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
-    @GetMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+    @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Set<String>> getAllUser() {
         return ResponseEntity.ok(userDao.getAll());
@@ -49,9 +48,7 @@ public class UserResourceController {
      * @param login the user login
      * @return the user
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @GetMapping(value = "/{login}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> getUser(@PathVariable("login") final String login) {
         Optional<User> user = userDao.get(login);
@@ -68,15 +65,14 @@ public class UserResourceController {
      * @param contentType the content type
      * @return the response entity
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
             )
-    public ResponseEntity<AuthenticationResponse> createUser(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType) throws JsonProcessingException {
+    public ResponseEntity<AuthenticationResponse> createUser(@RequestBody String requestBody, @RequestHeader("Content-Type") String contentType, @RequestHeader("Origin") String origin) throws JsonProcessingException {
         Optional<UserRequestDto> userRequestDto = getUserDtoRequest(requestBody, contentType);
         if (userRequestDto.isPresent()) {
-            return ResponseEntity.ok(authService.register(userRequestDto.get()));
+            return ResponseEntity.ok(authService.register(userRequestDto.get(), origin));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -91,7 +87,6 @@ public class UserResourceController {
      * @param contentType the content type
      * @return the response entity
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @PutMapping(value = "/{login}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<?> updateUser(
             @PathVariable("login") final String login,
@@ -122,7 +117,6 @@ public class UserResourceController {
      * @param login the user login
      * @return the response entity
      */
-    @CrossOrigin(origins = {"http://localhost/", "http://192.168.75.124/", "https://192.168.75.124"})
     @DeleteMapping(value = "/{login}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<?> deleteUser(@PathVariable("login") final String login) {
         try {
