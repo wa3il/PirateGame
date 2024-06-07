@@ -1,17 +1,32 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import Login from './components/Login.vue';
+import HelloWorld from './components/HelloWorld.vue';
 
 let logged = ref(false);
+const loginMessage = ref("");
+
+onMounted(() => {
+  const token = localStorage.getItem('jwt');
+  if (token) {
+    logged.value = true;
+  }
+});
 
 const toggleLogin = () => {
   logged.value = !logged.value;
-}
+};
 
 const getHelloWorldMsg = () => {
   return logged.value ? "Welcome to the App!" : "Please log in to continue.";
-}
+};
+
+const handleLoginEvent = (data) => {
+  localStorage.setItem('jwt', data.token);
+  logged.value = true;
+  loginMessage.value = "Login successful!";
+};
+
 </script>
 
 <template>
@@ -26,18 +41,15 @@ const getHelloWorldMsg = () => {
         <RouterLink to="/about">About</RouterLink>
       </nav>
 
-      <!-- Bouton pour basculer l'état de connexion -->
       <button @click="toggleLogin">Toggle login</button>
     </div>
   </header>
 
-  <!-- Affichage du formulaire de login ou du reste de l'application selon logged -->
   <template v-if="logged">
-    <!-- Le reste (implémenter avec Spring) -->
     <RouterView />
   </template>
   <template v-else>
-    <Login :message="loginMessage" @loginEvent="login" />
+    <Login :message="loginMessage" @loginEvent="handleLoginEvent" />
   </template>
 </template>
 
