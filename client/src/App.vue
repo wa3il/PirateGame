@@ -27,6 +27,12 @@ const handleLoginEvent = (data) => {
   loginMessage.value = "Login successful!";
 };
 
+const handleLogout = () => {
+  logged.value = false;
+  localStorage.removeItem('jwt');
+};
+
+
 </script>
 
 <template>
@@ -41,7 +47,7 @@ const handleLoginEvent = (data) => {
         <RouterLink to="/about">About</RouterLink>
       </nav>
 
-      <button @click="toggleLogin">Toggle login</button>
+      <button v-if="logged" @click="handleLogout">Logout</button>
     </div>
   </header>
 
