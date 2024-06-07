@@ -13,10 +13,6 @@ onMounted(() => {
   }
 });
 
-const toggleLogin = () => {
-  logged.value = !logged.value;
-};
-
 const getHelloWorldMsg = () => {
   return logged.value ? "Welcome to the App!" : "Please log in to continue.";
 };
@@ -45,6 +41,7 @@ const handleLogout = () => {
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/map">MyMap</RouterLink>
       </nav>
 
       <button v-if="logged" @click="handleLogout">Logout</button>
@@ -63,11 +60,13 @@ const handleLogout = () => {
 import { ref } from 'vue';
 import Login from './components/Login.vue';
 import HelloWorld from './components/HelloWorld.vue';
+import MyMap from "./components/MyMap.vue";
 
 export default {
   components: {
     Login,
     HelloWorld,
+    MyMap
   },
   setup() {
     const logged = ref(false);
