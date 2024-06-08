@@ -1,7 +1,10 @@
 <template>
-  <div class="welcome-container">
-    <h1 class="welcome-title">Welcome to our game</h1>
-    <p class="welcome-text">Ahoy, matey! Welcome aboard to the thrilling world of pirates. In this game, you'll embark on a daring adventure on the high seas, navigating treacherous waters, hunting for buried treasure, and engaging in swashbuckling battles. Choose your role wisely, whether you're a cunning pirate seeking riches or a brave villager defending your island home. Set sail, and let the adventure begin!</p>
+  <div class = "container">
+    <div class="welcome-container">
+      <h1 class="welcome-title">Are you ready for adventure?</h1>
+      <p class="welcome-text">
+        Welcome to Nautibus Island! You're either a brave villager protecting the village or a daring pirate scavenging and attacking. Enjoy the thrilling journey and may the best team win!
+      </p>
   </div>
   <div class="login-container">
     <h2 v-if="isLogin">Please login or create an account</h2>
@@ -28,6 +31,10 @@
       <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
     </div>
   </div>
+
+
+  </div>
+  
 </template>
 
 <script>
@@ -136,6 +143,7 @@ export default {
 
 .welcome-container {
   text-align: center;
+  margin-bottom: 2rem;
   color: white;
 }
 
