@@ -12,7 +12,7 @@
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" class="input-field">
+        <input type="text" id="username" v-model="login" class="input-field">
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       isLogin: true,
-      username: '',
+      login: '',
       password: '',
       role: 'villageois'
     };
@@ -59,11 +59,11 @@ export default {
     },
     async handleLogin() {
       try {
-        const response = await fetch('http://localhost:8080/users_war_exploded/users/login', {
+        const response = await fetch('https://192.168.75.124:8443/users/users/login', {
           method: 'POST',
+          mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Origin': window.location.origin
           },
           body: JSON.stringify({ login: this.login, password: this.password })
         });
@@ -71,6 +71,7 @@ export default {
         if (response.ok) {
           const data = await response.json();
           this.$emit('loginEvent', data);
+          alert('Login successful');
         } else {
           alert('Login failed');
         }
