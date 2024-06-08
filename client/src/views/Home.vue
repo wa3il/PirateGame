@@ -1,6 +1,12 @@
 <template>
     <div>
       <h5>Home Page</h5>
+      <div class="welcome-container">
+      <h1 class="welcome-title">Are you ready for adventure?</h1>
+      <p class="welcome-text">
+        Welcome to Nautibus Island! You're either a brave villager protecting the village or a daring pirate scavenging and attacking. Enjoy the thrilling journey and may the best team win!
+      </p>
+    </div>
       <Login />
     </div>
   </template>
@@ -61,6 +67,24 @@
     flex: 1;
     padding: 1rem;
   }
+
+  .welcome-container {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
   
   footer {
     background-color: #333;

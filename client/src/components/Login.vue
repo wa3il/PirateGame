@@ -1,11 +1,6 @@
 <template>
   <div class = "container">
-    <div class="welcome-container">
-      <h1 class="welcome-title">Are you ready for adventure?</h1>
-      <p class="welcome-text">
-        Welcome to Nautibus Island! You're either a brave villager protecting the village or a daring pirate scavenging and attacking. Enjoy the thrilling journey and may the best team win!
-      </p>
-  </div>
+    
   <div class="login-container">
     <h2 v-if="isLogin">Please login or create an account</h2>
     <h2 v-else>Create an Account</h2>
@@ -72,6 +67,9 @@ export default {
           const data = await response.json();
           this.$emit('loginEvent', data);
           alert('Login successful');
+          this.$emit('loginEvent', data);
+          this.$emit('login-successful'); // Emit the event
+          this.$router.push('/game'); // Navigate to the game page
         } else {
           alert('Login failed');
         }

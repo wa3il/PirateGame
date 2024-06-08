@@ -11,7 +11,7 @@
       </nav>
     </header>
     <main>
-      <router-view></router-view>
+      <router-view :is-logged in="isLoggedIn" @login-successful="handleLoginSuccessful"></router-view>
     </main>
     <footer>
       <p>&copy; 2024 Pirate's Curse</p>
@@ -26,6 +26,11 @@ export default {
     return {
       isLoggedIn: false // Change this to true to simulate a logged-in user
     };
+  },
+  methods: {
+    handleLoginSuccessful() {
+      this.isLoggedIn = true;
+    }
   }
 };
 </script>
