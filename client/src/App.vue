@@ -1,134 +1,115 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue'
-
-let logged = ref(false);
-
-const toggleLogin = () => {
-  logged.value = !logged.value;
-}
-
-const getHelloWorldMsg = () => {
-  return logged.value ? "Welcome to the App!" : "Please log in to continue.";
-}
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld :msg="getHelloWorldMsg()" />
-
+  <div id="app">
+    <header>
+      <div class="title-container">
+        <!--<img src="@/assets/icon.png" alt="App Icon" class="app-icon" />-->
+        <h1>Pirate's Curse</h1>
+      </div>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <router-link v-if="!isLoggedIn" to="/">Home</router-link>
+        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
       </nav>
-
-      <!-- Bouton pour basculer l'état de connexion -->
-      <button @click="toggleLogin">Toggle login</button>
-    </div>
-  </header>
-
-  <!-- Affichage du formulaire de login ou du reste de l'application selon logged -->
-  <template v-if="logged">
-    <!-- Le reste (implémenter avec Spring) -->
-    <RouterView />
-  </template>
-  <template v-else>
-    <Login :message="loginMessage" @loginEvent="login" />
-  </template>
+    </header>
+    <main>
+      <router-view></router-view>
+    </main>
+    <footer>
+      <p>&copy; 2024 Pirate's Curse</p>
+    </footer>
+  </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-import Login from './components/Login.vue';
-import HelloWorld from './components/HelloWorld.vue';
-
 export default {
-  components: {
-    Login,
-    HelloWorld,
-  },
-  setup() {
-    const logged = ref(false);
-    const loginMessage = ref(""); // Message d'erreur ou de succès de login
-
-    const login = () => {
-      logged.value = true;
-      loginMessage.value = "Login successful!";
-    };
-
+  name: 'App',
+  data() {
     return {
-      logged,
-      login,
-      loginMessage,
+      isLoggedIn: false // Change this to true to simulate a logged-in user
     };
-  },
+  }
 };
 </script>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style>
+/* Reset default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('assets/pirates-bg.jpg'); 
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; 
+}
+
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  flex-grow: 1;
+  width: 100%; /* Ensure the app takes the full width */
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  width: 100%; /* Ensure header takes the full width */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+}
+
+.app-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+  display: flex;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  color: white;
+  text-decoration: none;
+  margin-right: 1rem;
 }
 
-nav a:first-of-type {
-  border: 0;
+nav a:hover {
+  text-decoration: underline;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+main {
+  flex: 1;
+  padding: 1rem;
+  width: 100%; /* Ensure main takes the full width */
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  width: 100%; /* Ensure footer takes the full width */
 }
 </style>

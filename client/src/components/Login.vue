@@ -1,37 +1,153 @@
 <template>
-  <h2>{{ message }}</h2>
-
-    <label for="login">Login :&nbsp;</label>
-    <input type="text" name="login" id="login" />
-    <br />
-    <label for="password">Password :&nbsp;</label>
-    <input type="password" name="password" id="password" />
-    <br />
-    <button @click="$emit('loginEvent')">Send</button>
-
+  <div class="welcome-container">
+    <h1 class="welcome-title">Welcome to our game</h1>
+    <p class="welcome-text">Ahoy, matey! Welcome aboard to the thrilling world of pirates. In this game, you'll embark on a daring adventure on the high seas, navigating treacherous waters, hunting for buried treasure, and engaging in swashbuckling battles. Choose your role wisely, whether you're a cunning pirate seeking riches or a brave villager defending your island home. Set sail, and let the adventure begin!</p>
+  </div>
+  <div class="login-container">
+    <h2 v-if="isLogin">Please login or create an account</h2>
+    <h2 v-else>Create an Account</h2>
+    <form @submit.prevent="handleLogin">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" v-model="username" class="input-field">
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" v-model="password" class="input-field">
+      </div>
+      <div v-if="!isLogin" class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" v-model="role" class="input-field">
+          <option value="villageois">Villageois</option>
+          <option value="pirate">Pirate</option>
+        </select>
+      </div>
+      <Button type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
+    </form>
+    <div class="toggle-link">
+      <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
+    </div>
+  </div>
 </template>
 
 <script>
+import Button from 'primevue/button';
+
 export default {
-  name: "Login",
-  props: {
-    message: String
+  name: 'Login',
+  components: {
+    Button
+  },
+  data() {
+    return {
+      isLogin: true,
+      username: '',
+      password: '',
+      role: 'villageois'
+    };
   },
   methods: {
-    login: () => {
-      console.log("Login cliqué.");
-      //TODO qqch ici
+    toggleMode() {
+      this.isLogin = !this.isLogin;
     },
-  },
-  emits: ['loginEvent']
+    async handleLogin() {
+      try {
+        const response = await fetch('http://localhost:8080/users_war_exploded/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Origin': window.location.origin
+          },
+          body: JSON.stringify({ login: this.login, password: this.password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          this.$emit('loginEvent', data);
+        } else {
+          alert('Login failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    }
+   
+  }
 };
 </script>
 
 <style scoped>
-input,
-input[type="submit"],
-select {
-  color: grey;
-  border: 1px solid;
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.toggle-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.toggle-link span {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle-link span:hover {
+  color: #0056b3;
+}
+
+.welcome-container {
+  text-align: center;
+  color: white;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
 }
 </style>
