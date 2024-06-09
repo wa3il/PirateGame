@@ -14,7 +14,7 @@
         </div>
         <div v-if="!isLogin" class="form-group">
           <label for="role">Role:</label>
-          <select id="role" v-model="role" class="input-field">
+          <select id="role" v-model="user.role" class="input-field">
             <option value="VILLAGEOIS">Villageois</option>
             <option value="PIRATE">Pirate</option>
           </select>
@@ -42,8 +42,8 @@ export default {
       user: {
         login: '',
         password: '',
-        role: ''
-      },
+        role: 'VILLAGEOIS'
+      }
     };
   },
   methods: {
@@ -64,13 +64,11 @@ export default {
         if (response.ok) {
           const data = await response.json();
           alert('Login successful');
-          
           localStorage.setItem('token', data.token);
-          this.user = { login: data.login, role: data.species };
+          this.user.role = data.species; // Assign the role from response
           localStorage.setItem('user', JSON.stringify(this.user));
-          this.$emit('loginEvent', this.user); // Emit the event
-          //this.$emit('loginEvent', data); // Emit the event
-          this.$router.push('/game'); // Navigate to the game page
+          this.$emit('loginEvent', this.user);
+          this.$router.push('/game');
         } else {
           alert('Login failed');
         }
@@ -88,12 +86,12 @@ export default {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({ login: this.login, password: this.password, species: this.role })
+          body: JSON.stringify({ login: this.user.login, password: this.user.password, species: this.user.role })
         });
         if (response.ok) {
           const data = await response.json();
           alert('Account created successfully');
-          this.$emit('loginEvent', data); // Emit the event
+          this.$emit('loginEvent', { login: this.user.login, role: this.user.role });
           this.toggleMode();
         } else {
           alert('Account creation failed');

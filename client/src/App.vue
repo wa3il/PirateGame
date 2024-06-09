@@ -5,10 +5,9 @@
         <h1>Pirate's Curse</h1>
       </div>
       <nav>
-        <router-link v-if="!isLoggedIn" to="/">Home</router-link>
-        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
+        <router-link v-if="isLoggedIn" to="/game">Profil</router-link>
         <div v-if="isLoggedIn" class="user-info">
-          <span>{{ user.login }} ({{ user.role }})</span>
+          <span>{{ user.login }} -- {{ user.role }}</span>
           <button @click="handleLogout">Logout</button>
         </div>
       </nav>
@@ -129,6 +128,14 @@ nav a:hover {
   text-decoration: underline;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info span {
+  margin-right: 1rem;
+}
 main {
   flex: 1;
   padding: 1rem;
