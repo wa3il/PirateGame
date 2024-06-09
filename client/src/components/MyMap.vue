@@ -11,67 +11,90 @@
 
 <script>
 import "leaflet/dist/leaflet.css";
-//import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import { useMapStore } from '../stores/mapStore';
 
-// initialisation de la map
-let lat = 45.782,
-  lng = 4.8656,
-  zoom = 19;
 let mymap = {};
-const mapStore = useMapStore();
 
 export default {
   name: "MyMap",
+  setup() {
+    const mapStore = useMapStore();
+
+    return { mapStore };
+  },
   methods: {
     // Procédure de mise à jour de la map
-    updateMap: function () {
-      // Affichage à la nouvelle position
-      mymap.setView([lat, lng], zoom);
+    updateMap() {
+      mymap.setView([this.lat, this.lng], this.zoom);
 
       // La fonction de validation du formulaire renvoie false pour bloquer le rechargement de la page.
       return false;
     },
+    addMarkers() {
+      this.mapStore.locations.forEach(location => {
+        L.marker([location.lat, location.lng])
+            .addTo(mymap)
+            .bindPopup(`Location: ${location.name}`)
+            .openPopup();
+      });
+    },
+    clearMarkers() {
+      // This function can be used to clear existing markers from the map before adding new ones.
+      for (let i in mymap._layers) {
+        if (mymap._layers[i]._icon) {
+          mymap.removeLayer(mymap._layers[i]);
+        }
+      }
+    },
   },
   async beforeMount() {
-    // HERE is where to load Leaflet components!
     const L = await import("leaflet");
+    this.lat = 45.782;
+    this.lng = 4.8656;
+    this.zoom = 19;
+
     // Procédure d'initialisation
     mymap = L.map("map", {
-      center: [lat, lng],
-      zoom: zoom,
+      center: [this.lat, this.lng],
+      zoom: this.zoom,
     });
-    //updateMap();
 
     // Création d'un "tile layer" (permet l'affichage sur la carte)
     L.tileLayer(
-      "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg90?access_token=pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
-      {
-        maxZoom: 22,
-        minZoom: 1,
-        attribution:
-          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: "mapbox/streets-v11",
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken:
-          "pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
-      }
+        "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg90?access_token=pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
+        {
+          maxZoom: 22,
+          minZoom: 1,
+          attribution:
+              'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+              '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken:
+              "pk.eyJ1IjoieGFkZXMxMDExNCIsImEiOiJjbGZoZTFvbTYwM29sM3ByMGo3Z3Mya3dhIn0.df9VnZ0zo7sdcqGNbfrAzQ",
+        }
     ).addTo(mymap);
 
-    // Ajout d'un marker
-    L.marker([45.78207, 4.86559])
-      .addTo(mymap)
-      .bindPopup("Entrée du bâtiment<br><strong>Nautibus</strong>.")
-      .openPopup();
+    this.addMarkers();
 
     // Clic sur la carte
     mymap.on("click", (e) => {
-      lat = e.latlng.lat;
-      lng = e.latlng.lng;
-      this.updateMap();
+      this.lat = e.latlng.lat;
+      this.lng = e.latlng.lng;
+
+      const newLocation = {
+        id: this.mapStore.locations.length + 1,
+        name: `Location ${this.mapStore.locations.length + 1}`,
+        lat: this.lat,
+        lng: this.lng
+      };
+
+      this.mapStore.addLocation(newLocation);
+
+      this.clearMarkers();
+      this.addMarkers();
     });
   },
 };
