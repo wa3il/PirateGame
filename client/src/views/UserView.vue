@@ -27,6 +27,10 @@
     },
     data() {
       return {
+        user: {
+          login: '',
+          password: ''
+        },
         newPassword: '',
         confirmPassword: ''
       };
@@ -34,17 +38,22 @@
     methods: {
       async handleChangePassword() {
         try {
-          const response = await fetch(`http://localhost:8080/users_war_exploded/users/${this.login}`, {
+          this.user = JSON.parse(localStorage.getItem('user'));
+          const response = await fetch(`http://localhost:8080/users_war_exploded/users/${this.user.login}`, {
             method: 'PUT',
             mode: 'cors',
+            
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-            body: JSON.stringify({ login: this.login, newPassword: this.newPassword })
+            body: JSON.stringify({ login: this.user.login, password: this.newPassword })
           });
   
           if (response.ok) {
-            alert('Password changed successfully');
+            alert('Password changed successfully'); 
+            this.user.password = this.newPassword;
+            localStorage.setItem('user', JSON.stringify(this.user));
           } else {
             alert('Failed to change password');
           }
