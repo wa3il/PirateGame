@@ -1,35 +1,31 @@
 <template>
-  <div class = "container">
-    
-  <div class="login-container">
-    <h2 v-if="isLogin">Please login or create an account</h2>
-    <h2 v-else>Create an Account</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="login" class="input-field">
+  <div class="container">
+    <div class="login-container">
+      <h2 v-if="isLogin">Please login or create an account</h2>
+      <h2 v-else>Create an Account</h2>
+      <form @submit.prevent="handleConnection">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="user.login" class="input-field">
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="user.password" class="input-field">
+        </div>
+        <div v-if="!isLogin" class="form-group">
+          <label for="role">Role:</label>
+          <select id="role" v-model="role" class="input-field">
+            <option value="VILLAGEOIS">Villageois</option>
+            <option value="PIRATE">Pirate</option>
+          </select>
+        </div>
+        <Button type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
+      </form>
+      <div class="toggle-link">
+        <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
       </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" class="input-field">
-      </div>
-      <div v-if="!isLogin" class="form-group">
-        <label for="role">Role:</label>
-        <select id="role" v-model="role" class="input-field">
-          <option value="villageois">Villageois</option>
-          <option value="pirate">Pirate</option>
-        </select>
-      </div>
-      <Button type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
-    </form>
-    <div class="toggle-link">
-      <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
     </div>
   </div>
-
-
-  </div>
-  
 </template>
 
 <script>
@@ -43,9 +39,11 @@ export default {
   data() {
     return {
       isLogin: true,
-      login: '',
-      password: '',
-      role: 'villageois'
+      user: {
+        login: '',
+        password: '',
+        role: ''
+      },
     };
   },
   methods: {
@@ -54,21 +52,24 @@ export default {
     },
     async handleLogin() {
       try {
-        const response = await fetch('https://192.168.75.124:8443/users/users/login', {
+        const response = await fetch('http://localhost:8080/users_war_exploded/users/login', {
           method: 'POST',
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ login: this.login, password: this.password })
+          body: JSON.stringify({ login: this.user.login, password: this.user.password })
         });
 
         if (response.ok) {
           const data = await response.json();
-          this.$emit('loginEvent', data);
           alert('Login successful');
-          this.$emit('loginEvent', data);
-          this.$emit('login-successful'); // Emit the event
+          
+          localStorage.setItem('token', data.token);
+          this.user = { login: data.login, role: data.species };
+          localStorage.setItem('user', JSON.stringify(this.user));
+          this.$emit('loginEvent', this.user); // Emit the event
+          //this.$emit('loginEvent', data); // Emit the event
           this.$router.push('/game'); // Navigate to the game page
         } else {
           alert('Login failed');
@@ -77,8 +78,38 @@ export default {
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
       }
+    },
+    async handleSubscribe() {
+      try {
+        const response = await fetch('http://localhost:8080/users_war_exploded/users', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ login: this.login, password: this.password, species: this.role })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          alert('Account created successfully');
+          this.$emit('loginEvent', data); // Emit the event
+          this.toggleMode();
+        } else {
+          alert('Account creation failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    },
+    handleConnection() {
+      if (this.isLogin) {
+        this.handleLogin();
+      } else {
+        this.handleSubscribe();
+      }
     }
-   
   }
 };
 </script>

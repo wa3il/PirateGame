@@ -2,16 +2,19 @@
   <div id="app">
     <header>
       <div class="title-container">
-        <!--<img src="@/assets/icon.png" alt="App Icon" class="app-icon" />-->
         <h1>Pirate's Curse</h1>
       </div>
       <nav>
         <router-link v-if="!isLoggedIn" to="/">Home</router-link>
         <router-link v-if="isLoggedIn" to="/game">Game</router-link>
+        <div v-if="isLoggedIn" class="user-info">
+          <span>{{ user.login }} ({{ user.role }})</span>
+          <button @click="handleLogout">Logout</button>
+        </div>
       </nav>
     </header>
     <main>
-      <router-view :is-logged in="isLoggedIn" @login-successful="handleLoginSuccessful"></router-view>
+      <router-view @loginEvent="handleLoginSuccess"></router-view>
     </main>
     <footer>
       <p>&copy; 2024 Pirate's Curse</p>
@@ -24,12 +27,34 @@ export default {
   name: 'App',
   data() {
     return {
-      isLoggedIn: false // Change this to true to simulate a logged-in user
+      isLoggedIn: false,
+      user: {
+        login: '',
+        role: ''
+      }
     };
   },
   methods: {
-    handleLoginSuccessful() {
+    handleLoginSuccess(user) {
       this.isLoggedIn = true;
+      this.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
+    },
+    handleLogout() {
+      this.isLoggedIn = false;
+      this.user = {
+        login: '',
+        role: ''
+      };
+      localStorage.removeItem('user');
+      this.$router.push('/');
+    }
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      this.isLoggedIn = true;
+      this.user = user;
     }
   }
 };
