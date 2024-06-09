@@ -5,7 +5,12 @@
         <h1>Pirate's Curse</h1>
       </div>
       <nav>
+<<<<<<< HEAD
         <router-link v-if="isLoggedIn" to="/profil">Profil</router-link>
+=======
+        <router-link v-if="isLoggedIn" to="/user">Profil</router-link>
+        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
+>>>>>>> d19ff187e13a9744418d9958cf75014228bfa3a1
         <div v-if="isLoggedIn" class="user-info">
           <span>{{ user.login }} -- {{ user.role }}</span>
           <button @click="handleLogout">Logout</button>
