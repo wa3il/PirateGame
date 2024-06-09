@@ -13,7 +13,6 @@
   
   <script>
   import Login from '../components/Login.vue';
-  import Button from 'primevue/button';
   
   export default {
     name: 'Home',
