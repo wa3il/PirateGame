@@ -12,12 +12,14 @@
 <script>
 import "leaflet/dist/leaflet.css";
 //import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import { useMapStore } from '../stores/mapStore';
 
 // initialisation de la map
 let lat = 45.782,
   lng = 4.8656,
   zoom = 19;
 let mymap = {};
+const mapStore = useMapStore();
 
 export default {
   name: "MyMap",
