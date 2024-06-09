@@ -98,7 +98,7 @@ public class UserResourceController {
                 Optional<User> user = userDao.get(login);
                 if (user.isPresent()) {
                     UserRequestDto userdto = requestDto.get();
-                    userDao.update(user.get(), new String[]{userdto.getPassword()});
+                    userDao.update(user.get(), new String[]{authService.encrypt(userdto.getPassword())});
                     return ResponseEntity.ok("Utilisateur mis à jour");
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
