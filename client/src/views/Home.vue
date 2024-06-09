@@ -7,7 +7,9 @@
         Welcome to Nautibus Island! You're either a brave villager protecting the village or a daring pirate scavenging and attacking. Enjoy the thrilling journey and may the best team win!
       </p>
     </div>
+        if !login
       <Login />
+      else <Profil />
     </div>
   </template>
   

@@ -5,7 +5,7 @@
         <h1>Pirate's Curse</h1>
       </div>
       <nav>
-        <router-link v-if="isLoggedIn" to="/game">Profil</router-link>
+        <router-link v-if="isLoggedIn" to="/profil">Profil</router-link>
         <div v-if="isLoggedIn" class="user-info">
           <span>{{ user.login }} -- {{ user.role }}</span>
           <button @click="handleLogout">Logout</button>
@@ -14,6 +14,7 @@
     </header>
     <main>
       <router-view @loginEvent="handleLoginSuccess"></router-view>
+      
     </main>
     <footer>
       <p>&copy; 2024 Pirate's Curse</p>
