@@ -93,5 +93,8 @@ public class AuthenticationService {
         }
     }
 
+    public String encrypt(String password) {
+        return passwordEncoder.encode(password);
+    }
 }
 
