@@ -9,13 +9,12 @@
         <router-link v-if="isLoggedIn" to="/game">Game</router-link>
         <div v-if="isLoggedIn" class="user-info">
           <span>{{ user.login }} -- {{ user.role }}</span>
-          <Button type="submit"  @click="handleLogout" label="Logout" class="submit-button" />
+          <Button type="submit" @click="handleLogout" label="Logout" class="submit-button" />
         </div>
       </nav>
     </header>
     <main>
-      <router-view @loginEvent="handleLoginSuccess"></router-view>
-      
+      <router-view></router-view>
     </main>
     <footer>
       <p>&copy; 2024 Pirate's Curse</p>
@@ -24,33 +23,21 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import Button from 'primevue/button';
+
 export default {
   name: 'App',
   components: {
-      Button
-    },
-  data() {
-    return {
-      isLoggedIn: false,
-      user: {
-        login: '',
-        role: ''
-      }
-    };
+    Button
+  },
+  computed: {
+    ...mapState('auth', ['isLoggedIn', 'user'])
   },
   methods: {
-    handleLoginSuccess(user) {
-      this.isLoggedIn = true;
-      this.user = user;
-      localStorage.setItem('user', JSON.stringify(user));
-    },
+    ...mapActions('auth', ['logout']),
     handleLogout() {
-      this.isLoggedIn = false;
-      this.user = {
-        login: '',
-        role: ''
-      };
+      this.logout();
       localStorage.removeItem('user');
       this.$router.push('/');
     }
@@ -58,12 +45,12 @@ export default {
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-      this.isLoggedIn = true;
-      this.user = user;
+      this.$store.dispatch('auth/login', user);
     }
   }
 };
 </script>
+
 
 <style>
 /* Reset default margin and padding */

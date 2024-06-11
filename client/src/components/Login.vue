@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Button from 'primevue/button';
 
 export default {
@@ -47,6 +48,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('auth', ['login']),
     toggleMode() {
       this.isLogin = !this.isLogin;
     },
@@ -56,7 +58,7 @@ export default {
           method: 'POST',
           mode: 'cors',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ login: this.user.login, password: this.user.password })
         });
@@ -65,9 +67,9 @@ export default {
           const data = await response.json();
           alert('Login successful');
           localStorage.setItem('token', data.token);
-          this.user.role = data.species; // Assign the role from response
+          this.user.role = data.species;
           localStorage.setItem('user', JSON.stringify(this.user));
-          this.$emit('loginEvent', this.user);
+          this.login(this.user); // Update Vuex state using namespaced action
           this.$router.push('/game');
         } else {
           alert('Login failed');
@@ -111,6 +113,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .login-container {
