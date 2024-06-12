@@ -1,7 +1,21 @@
 <template>
   <div id="app">
     <header>
+<<<<<<< HEAD
       <Navbar />
+=======
+      <div class="title-container">
+        <h1>Pirate's Curse</h1>
+      </div>
+      <nav>
+        <router-link v-if="isLoggedIn" to="/user">Profil</router-link>
+        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
+        <div v-if="isLoggedIn" class="user-info">
+          <span>{{ user.login }} -- {{ user.role }}</span>
+          <PrimeButton type="submit"  @click="handleLogout" label="Logout" class="submit-button" />
+        </div>
+      </nav>
+>>>>>>> 808133299135fbc234889de899804f289e7e182b
     </header>
     <main>
       <router-view></router-view>

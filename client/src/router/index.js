@@ -1,24 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import Game from '../views/Game.vue';
-import userview from '../views/UserView.vue';
+import HomeView from '../views/Home.vue';
+import GameView from '../views/Game.vue';
+import UserView from '../views/UserView.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: HomeView
   },
   {
     path: '/game',
     name: 'Game',
-    component: Game,
+    component: GameView,
     meta: { requiresAuth: true }
   },
   {
     path: '/user',
     name: 'user',
-    component: userview,
+    component: UserView,
     meta: { requiresAuth: true }
   }
 ];

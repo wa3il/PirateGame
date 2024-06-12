@@ -45,11 +45,11 @@ api-Game-deploy:
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/opt/nodejs/api/
     - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@$IP_ADDRESS "cd /opt/nodejs/api/ && npm install && pm2 stop index.js && pm2 delete index.js && pm2 start index.js"
 
-client-deploy:
+client-admin-deploy:
   stage: deploy
   image: node:20-alpine # docker image with Node.js
   only:
-    - main
+    - TP5
   before_script:
     - apk add --no-cache openssh-client
     - chmod 400 $CI_SSH_KEY
@@ -58,11 +58,28 @@ client-deploy:
     - cd admin
 
     # Copie des fichiers vers /opt/nodejs/api/public/ et /usr/share/nginx/secret/
-    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r front/* gitlabci@$IP_ADDRESS:/opt/nodejs/api/public/
-    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r front/* gitlabci@$IP_ADDRESS:/usr/share/nginx/secret/
+    # - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r front/* gitlabci@$IP_ADDRESS:/opt/nodejs/api/public/
+    # - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r front/* gitlabci@$IP_ADDRESS:/usr/share/nginx/secret/
 
     # Installation des dépendances npm et construction des versions dev et prod
     - npm install
     - npm run build:dev && cd dist && scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/opt/nodejs/api/public/ && cd ..
     - npm run build:prod && cd dist && scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/usr/share/nginx/secret/
 
+client-Game-deploy:
+  stage: deploy
+  image: node:20-alpine # docker image with Node.js
+  only:
+    - TP5
+  before_script:
+    - apk add --no-cache openssh-client
+    - chmod 400 $CI_SSH_KEY
+  script:
+    # Définition des chemins réutilisés
+    - cd client
+    - npm install
+    - npm run lint && npm run build
+    - cd dist
+
+    # Copie des fichiers vers  /usr/share/nginx/client/
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/usr/share/nginx/client/

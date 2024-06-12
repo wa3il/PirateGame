@@ -19,7 +19,7 @@
             <option value="PIRATE">Pirate</option>
           </select>
         </div>
-        <Button type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
+        <PrimeButton type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
       </form>
       <div class="toggle-link">
         <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
@@ -30,15 +30,15 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Button from 'primevue/button';
+import PrimeButton from 'primevue/button';
 
 //const API_URL = 'http://localhost:8080/users_war_exploded/users';
 const API_URL = 'https://192.168.75.124:8443/users/users';
 
 export default {
-  name: 'Login',
+  name: 'LoginComponent',
   components: {
-    Button
+    PrimeButton
   },
   data() {
     return {
@@ -95,6 +95,7 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           alert('Account created successfully');
           this.$emit('loginEvent', { login: this.user.login, role: this.user.role });
           this.toggleMode();

@@ -10,6 +10,7 @@
         </li>
       </ul>
     </div>
+<<<<<<< HEAD
     <div v-else>
       <p class="no-resources">Aucune ressource disponible.</p>
     </div>
@@ -33,6 +34,27 @@ export default {
   },
   mounted() {
     this.fetchResources();
+=======
+  </template>
+  
+  <script>
+  import MyMap from '../components/MyMap.vue';
+  
+  export default {
+    name: 'GameView',
+    components: {
+      MyMap
+    }
+  };
+  </script>
+  
+  <style>
+  /* Reset default margin and padding */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+>>>>>>> 808133299135fbc234889de899804f289e7e182b
   }
 };
 </script>
