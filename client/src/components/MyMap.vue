@@ -2,8 +2,6 @@
   <section>
     <h2>Carte</h2>
     <p class="content">
-      <strong>TODO :</strong> mettre à jour les positions des différents objets
-      sur la carte.
     </p>
     <div id="map" class="map" ref="map"></div>
   </section>

@@ -1,54 +1,28 @@
 <template>
   <div id="app">
     <header>
-      <div class="title-container">
-        <h1>Pirate's Curse</h1>
-      </div>
-      <nav>
-        <router-link v-if="isLoggedIn" to="/user">Profil</router-link>
-        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
-        <div v-if="isLoggedIn" class="user-info">
-          <span>{{ user.login }} -- {{ user.role }}</span>
-          <Button type="submit" @click="handleLogout" label="Logout" class="submit-button" />
-        </div>
-      </nav>
+      <Navbar />
     </header>
     <main>
       <router-view></router-view>
     </main>
     <footer>
-      <p>&copy; 2024 Pirate's Curse</p>
+      <Footer />
     </footer>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import Button from 'primevue/button';
+import Navbar from './components/Navbar.vue';
+import Footer from './components/Footer.vue'; // Ajout de l'importation du composant Footer
 
 export default {
   name: 'App',
   components: {
-    Button
-  },
-  computed: {
-    ...mapState('auth', ['isLoggedIn', 'user'])
-  },
-  methods: {
-    ...mapActions('auth', ['logout']),
-    handleLogout() {
-      this.logout();
-      localStorage.removeItem('user');
-      this.$router.push('/');
-    }
-  },
-  mounted() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      this.$store.dispatch('auth/login', user);
-    }
+    Navbar,
+    Footer // Ajout du composant Footer dans la section components
   }
-};
+}
 </script>
 
 

@@ -32,6 +32,9 @@
 import { mapActions } from 'vuex';
 import Button from 'primevue/button';
 
+//const API_URL = 'http://localhost:8080/users_war_exploded/users';
+const API_URL = 'https://192.168.75.124:8443/users/users';
+
 export default {
   name: 'Login',
   components: {
@@ -54,7 +57,7 @@ export default {
     },
     async handleLogin() {
       try {
-        const response = await fetch('http://localhost:8080/users_war_exploded/users/login', {
+        const response = await fetch(API_URL+'/login', {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -81,7 +84,7 @@ export default {
     },
     async handleSubscribe() {
       try {
-        const response = await fetch('http://localhost:8080/users_war_exploded/users', {
+        const response = await fetch(API_URL, {
           method: 'POST',
           mode: 'cors',
           headers: {
