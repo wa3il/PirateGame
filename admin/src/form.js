@@ -115,7 +115,6 @@ function setTtl() {
 }
 
 function startGame(mymap){
-	//setInterval(getResources, 10000);
 	getResources(mymap);
 }
 

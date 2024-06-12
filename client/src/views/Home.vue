@@ -7,17 +7,17 @@
         Welcome to Nautibus Island! You're either a brave villager protecting the village or a daring pirate scavenging and attacking. Enjoy the thrilling journey and may the best team win!
       </p>
     </div>
-      <Login />
+      <LoginComponent />
     </div>
   </template>
   
   <script>
-  import Login from '../components/Login.vue';
+  import LoginComponent from '../components/Login.vue';
   
   export default {
-    name: 'Home',
+    name: 'HomeView',
     components: {
-      Login
+      LoginComponent
     }
   };
   </script>

@@ -9,7 +9,7 @@
         <router-link v-if="isLoggedIn" to="/game">Game</router-link>
         <div v-if="isLoggedIn" class="user-info">
           <span>{{ user.login }} -- {{ user.role }}</span>
-          <Button type="submit"  @click="handleLogout" label="Logout" class="submit-button" />
+          <PrimeButton type="submit"  @click="handleLogout" label="Logout" class="submit-button" />
         </div>
       </nav>
     </header>
@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import Button from 'primevue/button';
+import PrimeButton from 'primevue/button';
 export default {
   name: 'App',
   components: {
-      Button
+    PrimeButton
     },
   data() {
     return {

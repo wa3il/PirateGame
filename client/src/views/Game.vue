@@ -9,7 +9,7 @@
   import MyMap from '../components/MyMap.vue';
   
   export default {
-    name: 'Game',
+    name: 'GameView',
     components: {
       MyMap
     }

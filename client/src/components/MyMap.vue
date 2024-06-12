@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useMapStore } from '../stores/mapStore';
 

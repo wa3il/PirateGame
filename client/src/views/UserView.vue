@@ -11,19 +11,19 @@
             <label for="confirm-password">Confirm New Password:</label>
             <input type="password" id="confirm-password" v-model="confirmPassword" class="input-field">
           </div>
-          <Button type="submit" label="Change Password" class="submit-button" />
+          <PrimeButton type="submit" label="Change Password" class="submit-button" />
         </form>
       </div>
     </div>
   </template>
   
   <script>
-  import Button from 'primevue/button';
+  import PrimeButton from 'primevue/button';
   
   export default {
-    name: 'userview',
+    name: 'UserView',
     components: {
-      Button
+      PrimeButton
     },
     data() {
       return {

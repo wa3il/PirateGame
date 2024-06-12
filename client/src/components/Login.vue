@@ -19,7 +19,7 @@
             <option value="PIRATE">Pirate</option>
           </select>
         </div>
-        <Button type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
+        <PrimeButton type="submit" :label="isLogin ? 'Login' : 'Create Account'" class="submit-button" />
       </form>
       <div class="toggle-link">
         <span @click="toggleMode">{{ isLogin ? 'Create an Account' : 'Already have an account? Login' }}</span>
@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import Button from 'primevue/button';
+import PrimeButton from 'primevue/button';
 
 export default {
-  name: 'Login',
+  name: 'LoginComponent',
   components: {
-    Button
+    PrimeButton
   },
   data() {
     return {
@@ -90,6 +90,7 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           alert('Account created successfully');
           this.$emit('loginEvent', { login: this.user.login, role: this.user.role });
           this.toggleMode();
