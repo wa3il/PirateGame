@@ -12,18 +12,30 @@ const routes = [
   {
     path: '/game',
     name: 'Game',
-    component: GameView
+    component: GameView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/user',
     name: 'user',
-    component: UserView
+    component: UserView,
+    meta: { requiresAuth: true }
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = !!localStorage.getItem('user');
+  if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+    alert('You must be logged in to see this page');
+    next('/');
+  } else {
+    next();
+  }
 });
 
 export default router;
