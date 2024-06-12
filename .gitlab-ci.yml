@@ -82,4 +82,4 @@ client-Game-deploy:
     - cd dist
 
     # Copie des fichiers vers  /usr/share/nginx/client/
-    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r front/* gitlabci@$IP_ADDRESS:/usr/share/nginx/client/
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r * gitlabci@$IP_ADDRESS:/usr/share/nginx/client/
